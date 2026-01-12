@@ -14,6 +14,18 @@ Route::get('/contact', function () {
     return view('profile.contact');
 })->name('profile.contact');
 
+Route::get('/books', function () {
+    return view('library.books');
+})->name('library.books');
+
+Route::get('/publishers', function () {
+    return view('library.publishers');
+})->name('library.publishers');
+
+Route::get('/authors', function () {
+    return view('library.authors');
+})->name('library.authors');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

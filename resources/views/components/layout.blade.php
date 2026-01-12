@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for interactive UI -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="h-full">
@@ -16,12 +18,12 @@
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <img class="h-8 w-8" src="https://laracasts.com/images/logo/logo-triangle.svg" alt="Your Company">
+                        <img class="h-8 w-8" src="https://www.svgrepo.com/show/164239/bookshelf.svg" alt="Your Company">
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <x-nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav-link>
-                            <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
+                            <x-nav.nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav.nav-link>
+                            <x-nav.nav-link href="/" :active="request()->is('/')">Home</x-nav.nav-link>
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
                                     Library
@@ -37,8 +39,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <x-nav-link href="/about" :active="request()->is('about')">About</x-nav-link>
-                            <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
+                            <x-nav.nav-link href="/about" :active="request()->is('about')">About</x-nav.nav-link>
+                            <x-nav.nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav.nav-link>
                         </div>
                     </div>
                 </div>
@@ -46,9 +48,6 @@
                     <div class="ml-4 flex items-center md:ml-6">
                         <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span class="absolute -inset-1.5"></span>
-                            <span class="sr-only">View notifications</span>
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                             </svg>
                         </button>
 
@@ -58,7 +57,7 @@
                                 <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                     <span class="absolute -inset-1.5"></span>
                                     <span class="sr-only">Open user menu</span>
-                                    <img class="h-8 w-8 rounded-full" src="https://laracasts.com/images/lary-ai-face.svg" alt="">
+                                    <img class="h-8 w-8 rounded-full" src="https://www.svgrepo.com/show/164239/bookshelf.svg" alt="">
                                 </button>
                             </div>
                         </div>
@@ -93,7 +92,7 @@
             <div class="border-t border-gray-700 pb-3 pt-4">
                 <div class="flex items-center px-5">
                     <div class="flex-shrink-0">
-                        <img class="h-10 w-10 rounded-full" src="https://laracasts.com/images/lary-ai-face.svg" alt="">
+                        <img class="h-10 w-10 rounded-full" src="https://www.svgrepo.com/show/164239/bookshelf.svg" alt="">
                     </div>
                     <div class="ml-3">
                         <div class="text-base font-medium leading-none text-white">Simao Morais</div>
