@@ -19,5 +19,18 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        User::factory()->create([
+            'name' => 'simao',
+            'email' => 'spmmazb@gmail.com',
+            'password' => bcrypt('123456Aa!'),
+            'is_admin' => true,
+        ]);
+
+        $this->call([
+            PublisherSeeder::class,
+            AuthorSeeder::class,
+            BookSeeder::class,
+        ]);
     }
 }

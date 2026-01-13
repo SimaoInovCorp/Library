@@ -9,4 +9,9 @@ class Publisher extends Model
 {
     /** @use HasFactory<\Database\Factories\PublisherFactory> */
     use HasFactory;
+
+    public function books()
+    {
+        return $this->hasMany(Book::class);
+    }
 }
