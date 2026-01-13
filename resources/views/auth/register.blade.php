@@ -56,5 +56,8 @@
                 </x-button>
             </div>
         </form>
+        <div class="flex items-center justify-center mt-4">
+            <x-home-button />
+        </div>
     </x-authentication-card>
 </x-guest-layout>

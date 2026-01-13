@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Book;
+use App\Models\Publisher;
+use App\Models\Author;
 
 class BookSeeder extends Seeder
 {
@@ -12,6 +15,56 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        // Create publishers
+        $bloomsbury = Publisher::firstOrCreate(['name' => 'Bloomsbury', 'logo' => null]);
+        $harper = Publisher::firstOrCreate(['name' => 'HarperCollins', 'logo' => null]);
+        $houghton = Publisher::firstOrCreate(['name' => 'Houghton Mifflin', 'logo' => null]);
+        $allen = Publisher::firstOrCreate(['name' => 'Allen & Unwin', 'logo' => null]);
+
+        // Create authors
+        $rowling = Author::firstOrCreate(['name' => 'J.K. Rowling', 'picture' => null]);
+        $tolkien = Author::firstOrCreate(['name' => 'J.R.R. Tolkien', 'picture' => null]);
+        $lewis = Author::firstOrCreate(['name' => 'C.S. Lewis', 'picture' => null]);
+
+        // Create books
+        $book1 = Book::create([
+            'isbn' => '9780747532743',
+            'name' => "Harry Potter and the Philosopher's Stone",
+            'bibliography' => 'First book in the Harry Potter series.',
+            'cover_image' => null,
+            'price' => 19.99,
+            'publisher_id' => $bloomsbury->id,
+        ]);
+        $book1->authors()->sync([$rowling->id]);
+
+        $book2 = Book::create([
+            'isbn' => '9780261103573',
+            'name' => 'The Lord of the Rings',
+            'bibliography' => 'Epic high-fantasy novel.',
+            'cover_image' => null,
+            'price' => 29.99,
+            'publisher_id' => $allen->id,
+        ]);
+        $book2->authors()->sync([$tolkien->id]);
+
+        $book3 = Book::create([
+            'isbn' => '9780064471190',
+            'name' => 'The Chronicles of Narnia: The Lion, the Witch and the Wardrobe',
+            'bibliography' => 'Classic fantasy novel for children.',
+            'cover_image' => null,
+            'price' => 14.99,
+            'publisher_id' => $harper->id,
+        ]);
+        $book3->authors()->sync([$lewis->id]);
+
+        $book4 = Book::create([
+            'isbn' => '9780395177112',
+            'name' => 'The Hobbit',
+            'bibliography' => 'Fantasy novel and children’s book by J.R.R. Tolkien.',
+            'cover_image' => null,
+            'price' => 17.99,
+            'publisher_id' => $houghton->id,
+        ]);
+        $book4->authors()->sync([$tolkien->id]);
     }
 }

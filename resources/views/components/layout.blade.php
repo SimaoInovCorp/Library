@@ -22,7 +22,6 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <x-nav.nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav.nav-link>
                             <x-nav.nav-link href="/" :active="request()->is('/')">Home</x-nav.nav-link>
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
@@ -41,6 +40,17 @@
                             </div>
                             <x-nav.nav-link href="/about" :active="request()->is('about')">About</x-nav.nav-link>
                             <x-nav.nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav.nav-link>
+                            @guest
+                                <x-nav.nav-link href="{{ route('login') }}" :active="request()->is('login')">Login</x-nav.nav-link>
+                                <x-nav.nav-link href="{{ route('register') }}" :active="request()->is('register')">Register</x-nav.nav-link>
+                            @endguest
+                            @auth
+                                <x-nav.nav-link href="{{ route('dashboard') }}" :active="request()->is('dashboard')">Dashboard</x-nav.nav-link>
+                                <form method="POST" action="{{ route('logout') }}" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</button>
+                                </form>
+                            @endauth
                         </div>
                     </div>
                 </div>
