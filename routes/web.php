@@ -18,9 +18,15 @@ Route::get('/books', function () {
     return view('library.books');
 })->name('library.books');
 
-Route::get('/publishers', function () {
-    return view('library.publishers');
-})->name('library.publishers');
+
+// Publisher CRUD routes (protected by auth & verified middleware)
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::resource('publishers', \App\Http\Controllers\PublisherController::class);
+});
 
 Route::get('/authors', function () {
     return view('library.authors');
