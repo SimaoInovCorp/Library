@@ -11,10 +11,19 @@ class PublisherController extends Controller
     /**
      * Display a listing of the publishers.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $publishers = Publisher::orderBy('name')->paginate(10);
-        return view('publishers.index', compact('publishers'));
+        $sort = $request->query('sort', 'name');
+        $direction = $request->query('direction', 'asc');
+        $validSorts = ['name'];
+        $validDirections = ['asc', 'desc'];
+        $sort = in_array($sort, $validSorts) ? $sort : 'name';
+        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
+
+        $publishers = Publisher::orderBy($sort, $direction)
+            ->paginate(10)
+            ->appends(['sort' => $sort, 'direction' => $direction]);
+        return view('publishers.index', compact('publishers', 'sort', 'direction'));
     }
 
     /**

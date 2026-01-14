@@ -15,19 +15,19 @@ class PublisherSeeder extends Seeder
     {
         Publisher::firstOrCreate([
             'name' => 'Bloomsbury',
-            'logo' => null,
+            'logo' => 'publishers/bloomsbury.jpg',
         ]);
         Publisher::firstOrCreate([
             'name' => 'HarperCollins',
-            'logo' => null,
+            'logo' => 'publishers/harpercollins.jpg',
         ]);
         Publisher::firstOrCreate([
             'name' => 'Houghton Mifflin',
-            'logo' => null,
+            'logo' => 'publishers/houghtonmifflin.jpg',
         ]);
         Publisher::firstOrCreate([
             'name' => 'Allen & Unwin',
-            'logo' => null,
+            'logo' => 'publishers/allen_unwin.jpg',
         ]);
     }
 }

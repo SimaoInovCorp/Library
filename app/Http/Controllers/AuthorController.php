@@ -8,13 +8,18 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
-    /**
-     * Display a listing of the authors.
-     */
-    public function index()
+    // Display a listing of the authors filtered and sorted.
+    public function index(Request $request)
     {
-        $authors = Author::orderBy('name')->paginate(10);
-        return view('authors.index', compact('authors'));
+        $sort = $request->query('sort', 'name');
+        $direction = $request->query('direction', 'asc');
+        $validSorts = ['name'];
+        $validDirections = ['asc', 'desc'];
+        $sort = in_array($sort, $validSorts) ? $sort : 'name';
+        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
+
+        $authors = Author::orderBy($sort, $direction)->paginate(10)->appends(['sort' => $sort, 'direction' => $direction]);
+        return view('authors.index', compact('authors', 'sort', 'direction'));
     }
 
     /**

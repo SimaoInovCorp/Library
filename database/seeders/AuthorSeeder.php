@@ -15,15 +15,15 @@ class AuthorSeeder extends Seeder
     {
         Author::firstOrCreate([
             'name' => 'J.K. Rowling',
-            'picture' => null,
+            'picture' => 'authors/jkrowling.jpg',
         ]);
         Author::firstOrCreate([
             'name' => 'J.R.R. Tolkien',
-            'picture' => null,
+            'picture' => 'authors/jrtolkien.jpg',
         ]);
         Author::firstOrCreate([
             'name' => 'C.S. Lewis',
-            'picture' => null,
+            'picture' => 'authors/cslewis.jpg',
         ]);
     }
 }

@@ -13,10 +13,20 @@ class BookController extends Controller
     /**
      * Display a listing of the books.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with(['publisher', 'authors'])->orderBy('name')->paginate(10);
-        return view('books.index', compact('books'));
+        $sort = $request->query('sort', 'name');
+        $direction = $request->query('direction', 'asc');
+        $validSorts = ['name'];
+        $validDirections = ['asc', 'desc'];
+        $sort = in_array($sort, $validSorts) ? $sort : 'name';
+        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
+
+        $books = Book::with(['publisher', 'authors'])
+            ->orderBy($sort, $direction)
+            ->paginate(10)
+            ->appends(['sort' => $sort, 'direction' => $direction]);
+        return view('books.index', compact('books', 'sort', 'direction'));
     }
 
     /**
