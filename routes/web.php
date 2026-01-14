@@ -14,9 +14,16 @@ Route::get('/contact', function () {
     return view('profile.contact');
 })->name('profile.contact');
 
-Route::get('/books', function () {
-    return view('library.books');
-})->name('library.books');
+
+// Book CRUD routes (protected by auth & verified middleware)
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::resource('books', \App\Http\Controllers\BookController::class);
+    Route::get('books/export/csv', [\App\Http\Controllers\BookController::class, 'exportCsv'])->name('books.export.csv');
+});
 
 
 // Publisher CRUD routes (protected by auth & verified middleware)
@@ -28,10 +35,17 @@ Route::middleware([
     Route::resource('publishers', \App\Http\Controllers\PublisherController::class);
 });
 
-Route::get('/authors', function () {
-    return view('library.authors');
-})->name('library.authors');
 
+// Author CRUD routes (protected by auth & verified middleware)
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::resource('authors', \App\Http\Controllers\AuthorController::class);
+});
+
+// Dashboard route (protected by auth & verified middleware)
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -42,6 +56,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
+// Admin routes (protected by auth & admin middleware)
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.dashboard');
