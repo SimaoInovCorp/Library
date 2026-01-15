@@ -20,9 +20,16 @@ class PublisherController extends Controller
         $sort = in_array($sort, $validSorts) ? $sort : 'name';
         $direction = in_array($direction, $validDirections) ? $direction : 'asc';
 
-        $publishers = Publisher::orderBy($sort, $direction)
+        $query = Publisher::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $publishers = $query->orderBy($sort, $direction)
             ->paginate(10)
-            ->appends(['sort' => $sort, 'direction' => $direction]);
+            ->appends($request->except('page'));
         return view('publishers.index', compact('publishers', 'sort', 'direction'));
     }
 

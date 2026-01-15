@@ -51,8 +51,8 @@
                 </select>
                 @error('authors')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-            <a href="{{ route('books.index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Update</button>
+            <a href="{{ route('books.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</a>
         </form>
     </div>
 </x-layout>

@@ -22,10 +22,19 @@ class BookController extends Controller
         $sort = in_array($sort, $validSorts) ? $sort : 'name';
         $direction = in_array($direction, $validDirections) ? $direction : 'asc';
 
-        $books = Book::with(['publisher', 'authors'])
-            ->orderBy($sort, $direction)
+        $query = Book::with(['publisher', 'authors']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('isbn', 'like', "%{$search}%");
+            });
+        }
+
+        $books = $query->orderBy($sort, $direction)
             ->paginate(10)
-            ->appends(['sort' => $sort, 'direction' => $direction]);
+            ->appends($request->except('page'));
         return view('books.index', compact('books', 'sort', 'direction'));
     }
 

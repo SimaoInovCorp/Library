@@ -18,7 +18,16 @@ class AuthorController extends Controller
         $sort = in_array($sort, $validSorts) ? $sort : 'name';
         $direction = in_array($direction, $validDirections) ? $direction : 'asc';
 
-        $authors = Author::orderBy($sort, $direction)->paginate(10)->appends(['sort' => $sort, 'direction' => $direction]);
+        $query = Author::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $authors = $query->orderBy($sort, $direction)
+            ->paginate(10)
+            ->appends($request->except('page'));
         return view('authors.index', compact('authors', 'sort', 'direction'));
     }
 

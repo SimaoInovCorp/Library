@@ -30,7 +30,7 @@
         <div class="mb-4">
             <strong>Price:</strong> {{ $book->price ? number_format($book->price, 2) : '-' }}
         </div>
-        <a href="{{ route('books.edit', $book) }}" class="btn btn-warning">Edit</a>
-        <a href="{{ route('books.index') }}" class="btn btn-secondary">Back</a>
+        <a href="{{ route('books.edit', $book) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
+        <a href="{{ route('books.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back</a>
     </div>
 </x-layout>

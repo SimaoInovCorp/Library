@@ -12,7 +12,7 @@
                 <span>No picture uploaded.</span>
             @endif
         </div>
-        <a href="{{ route('authors.edit', $author) }}" class="btn btn-warning">Edit</a>
-        <a href="{{ route('authors.index') }}" class="btn btn-secondary">Back</a>
+        <a href="{{ route('authors.edit', $author) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
+        <a href="{{ route('authors.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back</a>
     </div>
 </x-layout>
