@@ -11,7 +11,7 @@ class UpdateBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class UpdateBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'isbn' => 'required|string|max:255|unique:books,isbn,' . $this->route('book')->id,
+            'name' => 'required|string|max:255',
+            'bibliography' => 'nullable|string',
+            'cover_image' => 'nullable|image|max:2048',
+            'price' => 'nullable|numeric|min:0',
+            'publisher_id' => 'required|exists:publishers,id',
+            'authors' => 'required|array',
+            'authors.*' => 'exists:authors,id',
         ];
     }
 }

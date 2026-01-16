@@ -2,77 +2,55 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Book;
-use App\Models\Publisher;
-use App\Models\Author;
 use Illuminate\Http\Request;
+use App\Services\BookQueryService;
+use App\Services\BookService;
+use App\Services\BookExportService;
+use App\Services\BookFormService;
+use App\Services\ErrorHandlingService;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the books.
      */
-    public function index(Request $request)
+    public function index(Request $request, BookQueryService $bookQueryService)
     {
-        $sort = $request->query('sort', 'name');
-        $direction = $request->query('direction', 'asc');
-        $validSorts = ['name'];
-        $validDirections = ['asc', 'desc'];
-        $sort = in_array($sort, $validSorts) ? $sort : 'name';
-        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
-
-        $query = Book::with(['publisher', 'authors']);
-
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('isbn', 'like', "%{$search}%");
-            });
-        }
-
-        $books = $query->orderBy($sort, $direction)
+        $params = [
+            'sort' => $request->query('sort', 'name'),
+            'direction' => $request->query('direction', 'asc'),
+            'search' => $request->query('search'),
+        ];
+        $books = $bookQueryService->getFilteredBooks($params)
             ->paginate(10)
             ->appends($request->except('page'));
+        $sort = $params['sort'];
+        $direction = $params['direction'];
         return view('books.index', compact('books', 'sort', 'direction'));
     }
 
     /**
      * Show the form for creating a new book.
      */
-    public function create()
+    public function create(BookFormService $formService)
     {
-        $publishers = Publisher::orderBy('name')->get();
-        $authors = Author::orderBy('name')->get();
-        return view('books.create', compact('publishers', 'authors'));
+        return view('books.create', $formService->getFormData());
     }
 
     /**
      * Store a newly created book in storage.
      */
-    public function store(Request $request)
+    public function store(\App\Http\Requests\StoreBookRequest $request, BookService $bookService, ErrorHandlingService $errorService)
     {
-        $validated = $request->validate([
-            'isbn' => 'required|string|max:255|unique:books,isbn',
-            'name' => 'required|string|max:255',
-            'bibliography' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:2048',
-            'price' => 'nullable|numeric|min:0',
-            'publisher_id' => 'required|exists:publishers,id',
-            'authors' => 'required|array',
-            'authors.*' => 'exists:authors,id',
-        ]);
-
-        $book = new Book();
-        $book->fill($validated);
-        if ($request->hasFile('cover_image')) {
-            $book->cover_image = $request->file('cover_image')->store('books', 'public');
+        try {
+            $validated = $request->validated();
+            $coverImage = $request->file('cover_image');
+            $bookService->create($validated, $coverImage);
+            return redirect()->route('books.index')->with('success', 'Book created successfully.');
+        } catch (\Exception $e) {
+            return $errorService->handle($e, 'Book creation failed');
         }
-        $book->save();
-        $book->authors()->sync($validated['authors']);
-
-        return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
 
     /**
@@ -87,78 +65,48 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified book.
      */
-    public function edit(Book $book)
+    public function edit(Book $book, BookFormService $formService)
     {
-        $publishers = Publisher::orderBy('name')->get();
-        $authors = Author::orderBy('name')->get();
         $book->load('authors');
-        return view('books.edit', compact('book', 'publishers', 'authors'));
+        return view('books.edit', array_merge(['book' => $book], $formService->getFormData()));
     }
 
     /**
      * Update the specified book in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(\App\Http\Requests\UpdateBookRequest $request, Book $book, BookService $bookService, ErrorHandlingService $errorService)
     {
-        $validated = $request->validate([
-            'isbn' => 'required|string|max:255|unique:books,isbn,' . $book->id,
-            'name' => 'required|string|max:255',
-            'bibliography' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:2048',
-            'price' => 'nullable|numeric|min:0',
-            'publisher_id' => 'required|exists:publishers,id',
-            'authors' => 'required|array',
-            'authors.*' => 'exists:authors,id',
-        ]);
-
-        $book->fill($validated);
-        if ($request->hasFile('cover_image')) {
-            $book->cover_image = $request->file('cover_image')->store('books', 'public');
+        try {
+            $validated = $request->validated();
+            $coverImage = $request->file('cover_image');
+            $bookService->update($book, $validated, $coverImage);
+            return redirect()->route('books.index')->with('success', 'Book updated successfully.');
+        } catch (\Exception $e) {
+            return $errorService->handle($e, 'Book update failed');
         }
-        $book->save();
-        $book->authors()->sync($validated['authors']);
-
-        return redirect()->route('books.index')->with('success', 'Book updated successfully.');
     }
 
     /**
      * Remove the specified book from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book, BookService $bookService, ErrorHandlingService $errorService)
     {
-        $book->authors()->detach();
-        $book->delete();
-        return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
+        try {
+            $bookService->delete($book);
+            return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
+        } catch (\Exception $e) {
+            return $errorService->handle($e, 'Book deletion failed');
+        }
     }
     /**
      * Export books as CSV file.
      */
-    public function exportCsv()
+    public function exportCsv(BookExportService $bookExportService, ErrorHandlingService $errorService)
     {
-        $books = Book::with(['publisher', 'authors'])->get();
-
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="books.csv"',
-        ];
-
-        $callback = function() use ($books) {
-            $handle = fopen('php://output', 'w');
-            // Header row
-            fputcsv($handle, ['ID', 'ISBN', 'Name', 'Publisher', 'Authors', 'Price']);
-            foreach ($books as $book) {
-                fputcsv($handle, [
-                    $book->id,
-                    $book->isbn,
-                    $book->name,
-                    $book->publisher ? $book->publisher->name : '',
-                    $book->authors->pluck('name')->join(', '),
-                    $book->price,
-                ]);
-            }
-            fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        try {
+            return $bookExportService->exportCsv();
+        } catch (\Exception $e) {
+            return $errorService->handle($e, 'Book CSV export failed');
+        }
     }
 }
