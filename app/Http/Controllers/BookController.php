@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
-use App\Services\BookQueryService;
-use App\Services\BookService;
-use App\Services\BookExportService;
-use App\Services\BookFormService;
+use App\Services\Books\BookQueryService;
+use App\Services\Books\BookService;
+use App\Services\Books\BookExportService;
+use App\Services\Books\BookFormService;
 use App\Services\ErrorHandlingService;
 
 class BookController extends Controller
