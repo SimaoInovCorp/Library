@@ -30,6 +30,15 @@
         <div class="mb-4">
             <strong>Price:</strong> {{ $book->price ? number_format($book->price, 2) : '-' }}
         </div>
+        <div class="mb-4">
+            <strong>Copies:</strong> {{ $book->copies }}
+        </div>
+        @auth
+            <form action="{{ route('books.requisitions.store', $book) }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Request Loan</button>
+            </form>
+        @endauth
         <a href="{{ route('books.edit', $book) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
         <a href="{{ route('books.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back</a>
     </div>

@@ -28,6 +28,7 @@ class UpdateBookRequest extends FormRequest
             'cover_image' => 'nullable|image|max:2048',
             'price' => 'nullable|numeric|min:0',
             'publisher_id' => 'required|exists:publishers,id',
+            'copies' => 'required|integer|min:0',
             'authors' => 'required|array',
             'authors.*' => 'exists:authors,id',
         ];

@@ -14,6 +14,9 @@ class BookService
     {
         $book = new Book();
         $book->fill($validated);
+        if (isset($validated['copies'])) {
+            $book->copies = $validated['copies'];
+        }
         if ($coverImage) {
             $book->cover_image = $coverImage->store('books', 'public');
         }
@@ -28,6 +31,9 @@ class BookService
     public function update(Book $book, array $validated, ?UploadedFile $coverImage = null): Book
     {
         $book->fill($validated);
+        if (isset($validated['copies'])) {
+            $book->copies = $validated['copies'];
+        }
         if ($coverImage) {
             $book->cover_image = $coverImage->store('books', 'public');
         }

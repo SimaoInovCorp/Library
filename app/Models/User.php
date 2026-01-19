@@ -65,4 +65,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the requisitions for the user.
+     */
+    public function requisitions()
+    {
+        return $this->hasMany(Requisition::class);
+    }
 }

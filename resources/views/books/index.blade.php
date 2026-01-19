@@ -47,6 +47,7 @@
                     <th class="px-4 py-2 text-left">Authors</th>
                     <th class="px-4 py-2 text-left">Cover</th>
                     <th class="px-4 py-2 text-left">Price</th>
+                    <th class="px-4 py-2 text-left">Copies</th>
                     <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
             </thead>
@@ -65,6 +66,7 @@
                             <x-image-display :src="$book->cover_image" alt="Cover" />
                         </td>
                         <td class="px-4 py-2 align-middle">{{ $book->price ? number_format($book->price, 2) : '-' }}</td>
+                        <td class="px-4 py-2 align-middle">{{ $book->copies }}</td>
                         <td class="px-4 py-2 align-middle">
                             <div class="flex flex-row gap-2">
                                 <a href="{{ route('books.show', $book) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded">View</a>

@@ -33,6 +33,7 @@ class BookSeeder extends Seeder
             'cover_image' => 'books/harryPotter.jpg',
             'price' => 19.99,
             'publisher_id' => $bloomsbury->id,
+            'copies' => 5,
         ]);
         $book1->authors()->sync([$rowling->id]);
 
@@ -43,6 +44,7 @@ class BookSeeder extends Seeder
             'cover_image' => 'books/lotr.jpg',
             'price' => 29.99,
             'publisher_id' => $allen->id,
+            'copies' => 5,
         ]);
         $book2->authors()->sync([$tolkien->id]);
 
@@ -53,6 +55,7 @@ class BookSeeder extends Seeder
             'cover_image' => 'books/narnia.jpg',
             'price' => 14.99,
             'publisher_id' => $harper->id,
+            'copies' => 5,
         ]);
         $book3->authors()->sync([$lewis->id]);
 
@@ -63,6 +66,7 @@ class BookSeeder extends Seeder
             'cover_image' => 'books/hobbit.jpg',
             'price' => 17.99,
             'publisher_id' => $houghton->id,
+            'copies' => 5,
         ]);
         $book4->authors()->sync([$tolkien->id]);
     }

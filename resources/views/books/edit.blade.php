@@ -33,6 +33,11 @@
                 @error('price')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
+                <label for="copies" class="block">Copies</label>
+                <input type="number" name="copies" id="copies" class="form-input w-full" value="{{ old('copies', $book->copies) }}" min="0" required>
+                @error('copies')<div class="text-red-500">{{ $message }}</div>@enderror
+            </div>
+            <div class="mb-4">
                 <label for="publisher_id" class="block">Publisher</label>
                 <select name="publisher_id" id="publisher_id" class="form-input w-full" required>
                     <option value="">Select Publisher</option>
