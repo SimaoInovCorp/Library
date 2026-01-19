@@ -9,9 +9,16 @@ use App\Services\Books\BookService;
 use App\Services\Books\BookExportService;
 use App\Services\Books\BookFormService;
 use App\Services\ErrorHandlingService;
+use App\Http\Requests\Books\StoreBookRequest;
+use App\Http\Requests\Books\UpdateBookRequest;
+use Illuminate\Routing\Controller as BaseController;
 
-class BookController extends Controller
+class BookController extends BaseController
 {
+        public function __construct()
+        {
+            $this->middleware(['auth', 'admin']);
+        }
     /**
      * Display a listing of the books.
      */
@@ -41,7 +48,7 @@ class BookController extends Controller
     /**
      * Store a newly created book in storage.
      */
-    public function store(\App\Http\Requests\StoreBookRequest $request, BookService $bookService, ErrorHandlingService $errorService)
+    public function store(StoreBookRequest $request, BookService $bookService, ErrorHandlingService $errorService)
     {
         try {
             $validated = $request->validated();
@@ -74,7 +81,7 @@ class BookController extends Controller
     /**
      * Update the specified book in storage.
      */
-    public function update(\App\Http\Requests\UpdateBookRequest $request, Book $book, BookService $bookService, ErrorHandlingService $errorService)
+    public function update(UpdateBookRequest $request, Book $book, BookService $bookService, ErrorHandlingService $errorService)
     {
         try {
             $validated = $request->validated();

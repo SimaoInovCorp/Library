@@ -54,11 +54,23 @@
                             <div class="flex flex-row gap-2">
                                 <a href="{{ route('authors.show', $author) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded">View</a>
                                 <a href="{{ route('authors.edit', $author) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded">Edit</a>
-                                <form action="{{ route('authors.destroy', $author) }}" method="POST" style="display:inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <x-danger-button onclick="return confirm('Are you sure?')">Delete</x-danger-button>
-                                </form>
+                                <div x-data="{ showModal: false }">
+                                    <x-danger-button type="button" @click="showModal = true">Delete</x-danger-button>
+                                    <form x-ref="deleteForm" action="{{ route('authors.destroy', $author) }}" method="POST" class="hidden">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                    <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" style="display: none;">
+                                        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                                            <h2 class="text-lg font-semibold text-gray-900 mb-2">Delete Author</h2>
+                                            <p class="mb-4 text-gray-700">Are you sure you want to delete the author <span class="font-bold">{{ $author->name }}</span>? This action cannot be undone.</p>
+                                            <div class="flex justify-end gap-2">
+                                                <button type="button" class="btn btn-secondary px-4 py-2 rounded bg-gray-200 text-gray-800" @click="showModal = false">Cancel</button>
+                                                <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded" @click="$refs.deleteForm.submit(); showModal = false;">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
