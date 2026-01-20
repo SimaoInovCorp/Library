@@ -37,13 +37,26 @@ class RequisitionController extends Controller
     public function store(Request $request, Book $book)
     {
         $user = Auth::user();
-        // Prevent duplicate requisitions for the same book by the same user
-        $exists = Requisition::where('user_id', $user->id)
+        // Prevent duplicate active requisitions for the same book by the same user
+        $activeExists = Requisition::where('user_id', $user->id)
             ->where('book_id', $book->id)
-            ->where('status', 'pending')
+            ->whereIn('status', ['pending', 'approved'])
             ->exists();
-        if ($exists) {
-            return redirect()->back()->with('error', 'You have already requested this book.');
+        if ($activeExists) {
+            return redirect()->back()->with('error', 'You already have an active request for this book.');
+        }
+        // If book is unavailable, add user to waitlist and show friendly warning
+        if ($book->copies < 1) {
+            $alreadyWaitlisted = \App\Models\BookWaitlist::where('user_id', $user->id)
+                ->where('book_id', $book->id)
+                ->exists();
+            if (!$alreadyWaitlisted) {
+                \App\Models\BookWaitlist::create([
+                    'user_id' => $user->id,
+                    'book_id' => $book->id,
+                ]);
+            }
+            return redirect()->back()->with('error', 'This book is currently not available. You will be notified when it is returned.');
         }
         // Prevent any user from requesting a book that is already in a pending requisition
         $pendingExists = Requisition::where('book_id', $book->id)
@@ -79,14 +92,29 @@ class RequisitionController extends Controller
             return redirect()->back()->with('error', 'This book has already been returned.');
         }
         // Atomic update
-        \DB::transaction(function () use ($requisition) {
+        $notified = false;
+        \DB::transaction(function () use ($requisition, &$notified) {
             $requisition->status = 'returned';
             $requisition->save();
             $book = $requisition->book;
+            $wasZero = $book->copies === 0;
             $book->copies = $book->copies + 1;
             $book->save();
+            // If book was unavailable and now available, notify waitlist
+            if ($wasZero && $book->copies > 0) {
+                $waitlist = \App\Models\BookWaitlist::where('book_id', $book->id)->get();
+                foreach ($waitlist as $entry) {
+                    $entry->user->notify(new \App\Notifications\BookAvailableNotification($book));
+                }
+                \App\Models\BookWaitlist::where('book_id', $book->id)->delete();
+                $notified = true;
+            }
         });
-        return redirect()->back()->with('success', 'Book returned successfully!');
+        $msg = 'Book returned successfully!';
+        if ($notified) {
+            $msg .= ' All interested users have been notified.';
+        }
+        return redirect()->back()->with('success', $msg);
     }
 
     /**
@@ -110,6 +138,8 @@ class RequisitionController extends Controller
             $requisition->save();
             $book->copies = $book->copies - 1;
             $book->save();
+            // Notify user their requisition was approved
+            $requisition->user->notify(new \App\Notifications\RequisitionApprovedNotification($book));
         });
         return redirect()->back()->with('success', 'Requisition approved and book loaned!');
     }

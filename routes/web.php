@@ -76,4 +76,18 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
+    // User management routes
+    Route::resource('users', \App\Http\Controllers\UserController::class);
+});
+
+// Notifications routes
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('notifications', function () {
+        return view('notifications.index');
+    })->name('notifications.index');
+    Route::post('notifications/{notification}/read', function ($notificationId) {
+        $notification = Auth::user()->notifications()->findOrFail($notificationId);
+        $notification->markAsRead();
+        return back();
+    })->name('notifications.markAsRead');
 });
