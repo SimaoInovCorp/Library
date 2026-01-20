@@ -12,6 +12,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    /**
+     * Get the count of active requisitions (pending or approved).
+     */
+    public function activeRequisitionsCount(): int
+    {
+        return $this->requisitions()->whereIn('status', ['pending', 'approved'])->count();
+    }
+
     use HasApiTokens;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */

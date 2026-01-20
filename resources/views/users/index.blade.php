@@ -76,7 +76,7 @@
                         </td>
                         <td class="px-4 py-2 align-middle">
                             <div class="flex flex-row gap-2">
-                                <a href="{{ route('users.show', $user) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded">View</a>
+                                <a href="{{ route('users.show', $user) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded">Details</a>
                                 <a href="{{ route('users.edit', $user) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded">Edit</a>
                                 @if($user->id !== auth()->id())
                                     <div x-data="{ showModal: false }">

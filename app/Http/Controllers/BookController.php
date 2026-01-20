@@ -30,6 +30,7 @@ class BookController extends BaseController
             'search' => $request->query('search'),
         ];
         $books = $bookQueryService->getFilteredBooks($params)
+            ->withCount('requisitions')
             ->paginate(10)
             ->appends($request->except('page'));
         $sort = $params['sort'];
@@ -66,6 +67,7 @@ class BookController extends BaseController
     public function show(Book $book)
     {
         $book->load(['publisher', 'authors']);
+        $book->loadCount('requisitions');
         return view('books.show', compact('book'));
     }
 

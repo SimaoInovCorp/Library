@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Requisition;
+use App\Models\User;
+use App\Notifications\RequisitionCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RequisitionController extends Controller
 {
@@ -37,6 +40,10 @@ class RequisitionController extends Controller
     public function store(Request $request, Book $book)
     {
         $user = Auth::user();
+        // Limit regular users to 3 active requests *Note false positive activeRequisitionsCount method intelephense*
+        if (!$user->is_admin && $user->activeRequisitionsCount() >= 3) {
+            return redirect()->back()->with('error', 'You can only have 3 active book requests at a time.');
+        }
         // Prevent duplicate active requisitions for the same book by the same user
         $activeExists = Requisition::where('user_id', $user->id)
             ->where('book_id', $book->id)
@@ -65,11 +72,27 @@ class RequisitionController extends Controller
         if ($pendingExists) {
             return redirect()->back()->with('error', 'This book is already being requested by another user.');
         }
-        Requisition::create([
+        $now = now();
+        $requisition = Requisition::create([
             'user_id' => $user->id,
             'book_id' => $book->id,
             'status' => 'pending',
+            'requested_at' => $now,
+            'expected_end_at' => $now->copy()->addDays(5),
         ]);
+
+        // Load relationships for the notification
+        $requisition->load(['book.authors', 'book.publisher', 'user']);
+
+        // Notify the user
+        $user->notify(new RequisitionCreatedNotification($requisition));
+
+        // Notify all admins
+        $admins = User::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new RequisitionCreatedNotification($requisition));
+        }
+
         return redirect()->back()->with('success', 'Book request submitted successfully!');
     }
 
@@ -93,7 +116,7 @@ class RequisitionController extends Controller
         }
         // Atomic update
         $notified = false;
-        \DB::transaction(function () use ($requisition, &$notified) {
+        DB::transaction(function () use ($requisition, &$notified) {
             $requisition->status = 'returned';
             $requisition->save();
             $book = $requisition->book;
@@ -133,7 +156,7 @@ class RequisitionController extends Controller
         if ($book->copies < 1) {
             return redirect()->back()->with('error', 'No available copies to approve this requisition.');
         }
-        \DB::transaction(function () use ($requisition, $book) {
+        DB::transaction(function () use ($requisition, $book) {
             $requisition->status = 'approved';
             $requisition->save();
             $book->copies = $book->copies - 1;

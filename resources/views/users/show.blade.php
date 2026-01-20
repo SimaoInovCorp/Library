@@ -24,6 +24,10 @@
                 <label class="block text-gray-700 text-sm font-bold mb-2">Member Since</label>
                 <p class="text-gray-900">{{ $user->created_at->format('F d, Y') }}</p>
             </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Total Requisitions</label>
+                <p class="text-gray-900">{{ $user->requisitions_count }}</p>
+            </div>
             <div class="flex gap-2">
                 <a href="{{ route('users.edit', $user) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
                 <a href="{{ route('users.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back to List</a>

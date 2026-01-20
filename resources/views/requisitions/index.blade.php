@@ -65,6 +65,8 @@
                             <th class="px-4 py-2 text-left">Book</th>
                             <th class="px-4 py-2 text-left">Status</th>
                             <th class="px-4 py-2 text-left">Requested At</th>
+                            <th class="px-4 py-2 text-left">Expected End</th>
+                            <th class="px-4 py-2 text-left">Due</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +87,20 @@
                                         </form>
                                     @endif
                                 </td>
-                                <td class="px-4 py-2">{{ $req->created_at->format('Y-m-d H:i') }}</td>
+                                <td class="px-4 py-2">{{ $req->requested_at ? \Carbon\Carbon::parse($req->requested_at)->format('Y-m-d H:i') : '-' }}</td>
+                                <td class="px-4 py-2">{{ $req->expected_end_at ? \Carbon\Carbon::parse($req->expected_end_at)->format('Y-m-d H:i') : '-' }}</td>
+                                <td class="px-4 py-2">
+                                    @php
+                                        $status = $req->due_status;
+                                    @endphp
+                                    <span class="px-2 py-1 rounded text-sm
+                                        {{ $status === 'Overdue' ? 'bg-red-200 text-red-800' : '' }}
+                                        {{ $status === 'Due Today' ? 'bg-yellow-200 text-yellow-800' : '' }}
+                                        {{ $status === 'On Time' ? 'bg-green-200 text-green-800' : '' }}
+                                    ">
+                                        {{ $status }}
+                                    </span>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -107,6 +122,8 @@
                                 <th class="px-4 py-2 text-left">Book</th>
                                 <th class="px-4 py-2 text-left">Status</th>
                                 <th class="px-4 py-2 text-left">Requested At</th>
+                                <th class="px-4 py-2 text-left">Expected End</th>
+                                <th class="px-4 py-2 text-left">Due</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -128,7 +145,20 @@
                                             </form>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-2">{{ $req->created_at->format('Y-m-d H:i') }}</td>
+                                    <td class="px-4 py-2">{{ $req->requested_at ? \Carbon\Carbon::parse($req->requested_at)->format('Y-m-d H:i') : '-' }}</td>
+                                    <td class="px-4 py-2">{{ $req->expected_end_at ? \Carbon\Carbon::parse($req->expected_end_at)->format('Y-m-d H:i') : '-' }}</td>
+                                    <td class="px-4 py-2">
+                                        @php
+                                            $status = $req->due_status;
+                                        @endphp
+                                        <span class="px-2 py-1 rounded text-sm
+                                            {{ $status === 'Overdue' ? 'bg-red-200 text-red-800' : '' }}
+                                            {{ $status === 'Due Today' ? 'bg-yellow-200 text-yellow-800' : '' }}
+                                            {{ $status === 'On Time' ? 'bg-green-200 text-green-800' : '' }}
+                                        ">
+                                            {{ $status }}
+                                        </span>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

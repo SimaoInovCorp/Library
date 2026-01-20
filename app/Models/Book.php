@@ -29,4 +29,11 @@ class Book extends Model
     {
         return $this->belongsToMany(Author::class);
     }
+    /**
+     * Get all requisitions for this book.
+     */
+    public function requisitions()
+    {
+        return $this->hasMany(Requisition::class);
+    }
 }

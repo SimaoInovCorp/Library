@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('home');
@@ -86,7 +87,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         return view('notifications.index');
     })->name('notifications.index');
     Route::post('notifications/{notification}/read', function ($notificationId) {
-        $notification = Auth::user()->notifications()->findOrFail($notificationId);
+        $notification = Auth::user()->notifications()->findOrFail($notificationId); //False positive error from intelephense
         $notification->markAsRead();
         return back();
     })->name('notifications.markAsRead');

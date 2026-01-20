@@ -36,7 +36,7 @@ class UserController extends Controller
             $search = $request->input('search');
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -70,6 +70,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user->loadCount('requisitions');
         return view('users.show', compact('user'));
     }
 

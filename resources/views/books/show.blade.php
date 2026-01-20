@@ -33,6 +33,9 @@
         <div class="mb-4">
             <strong>Copies:</strong> {{ $book->copies }}
         </div>
+        <div class="mb-4">
+            <strong>Times Requested:</strong> {{ $book->requisitions_count }}
+        </div>
         @auth
             <form action="{{ route('books.requisitions.store', $book) }}" method="POST" class="inline">
                 @csrf
