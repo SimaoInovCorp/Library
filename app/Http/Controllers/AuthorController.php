@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use App\Services\Authors\AuthorService;
+use App\Services\Authors\AuthorQueryService;
 use App\Http\Requests\Authors\StoreAuthorRequest;
 use App\Http\Requests\Authors\UpdateAuthorRequest;
 use Illuminate\Http\Request;
@@ -11,25 +12,18 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     // Display a listing of the authors filtered and sorted.
-    public function index(Request $request)
+    public function index(Request $request, AuthorQueryService $authorQueryService)
     {
-        $sort = $request->query('sort', 'name');
-        $direction = $request->query('direction', 'asc');
-        $validSorts = ['name'];
-        $validDirections = ['asc', 'desc'];
-        $sort = in_array($sort, $validSorts) ? $sort : 'name';
-        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
-
-        $query = Author::query();
-
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%");
-        }
-
-        $authors = $query->orderBy($sort, $direction)
+        $params = [
+            'sort' => $request->query('sort', 'name'),
+            'direction' => $request->query('direction', 'asc'),
+            'search' => $request->query('search'),
+        ];
+        $authors = $authorQueryService->getFilteredAuthors($params)
             ->paginate(10)
             ->appends($request->except('page'));
+        $sort = $params['sort'];
+        $direction = $params['direction'];
         return view('authors.index', compact('authors', 'sort', 'direction'));
     }
 
