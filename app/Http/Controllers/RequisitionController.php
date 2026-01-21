@@ -34,7 +34,18 @@ class RequisitionController extends Controller
             ->whereNotIn('id', $booksWithPending)
             ->paginate(10);
 
-        return view('requisitions.index', compact('requisitions', 'availableBooks', 'allRequisitions'));
+        $activeCount = Requisition::activeCount();
+        $last30DaysCount = Requisition::last30DaysCount();
+        $returnedTodayCount = Requisition::returnedTodayCount();
+
+        return view('requisitions.index', compact(
+            'requisitions',
+            'availableBooks',
+            'allRequisitions',
+            'activeCount',
+            'last30DaysCount',
+            'returnedTodayCount'
+        ));
     }
 
     public function store(Request $request, Book $book)
