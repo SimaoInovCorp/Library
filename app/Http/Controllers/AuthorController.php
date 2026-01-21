@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Author;
+use App\Services\Authors\AuthorService;
+use App\Http\Requests\Authors\StoreAuthorRequest;
+use App\Http\Requests\Authors\UpdateAuthorRequest;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
@@ -42,20 +44,11 @@ class AuthorController extends Controller
     /**
      * Store a newly created author in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAuthorRequest $request, AuthorService $authorService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:authors,name',
-            'picture' => 'nullable|image|max:2048',
-        ]);
-
-        $author = new Author();
-        $author->name = $validated['name'];
-        if ($request->hasFile('picture')) {
-            $author->picture = $request->file('picture')->store('authors', 'public');
-        }
-        $author->save();
-
+        $validated = $request->validated();
+        $picture = $request->file('picture');
+        $authorService->create($validated, $picture);
         return redirect()->route('authors.index')->with('success', 'Author created successfully.');
     }
 
@@ -78,28 +71,20 @@ class AuthorController extends Controller
     /**
      * Update the specified author in storage.
      */
-    public function update(Request $request, Author $author)
+    public function update(UpdateAuthorRequest $request, Author $author, AuthorService $authorService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:authors,name,' . $author->id,
-            'picture' => 'nullable|image|max:2048',
-        ]);
-
-        $author->name = $validated['name'];
-        if ($request->hasFile('picture')) {
-            $author->picture = $request->file('picture')->store('authors', 'public');
-        }
-        $author->save();
-
+        $validated = $request->validated();
+        $picture = $request->file('picture');
+        $authorService->update($author, $validated, $picture);
         return redirect()->route('authors.index')->with('success', 'Author updated successfully.');
     }
 
     /**
      * Remove the specified author from storage.
      */
-    public function destroy(Author $author)
+    public function destroy(Author $author, AuthorService $authorService)
     {
-        $author->delete();
+        $authorService->delete($author);
         return redirect()->route('authors.index')->with('success', 'Author deleted successfully.');
     }
 }
