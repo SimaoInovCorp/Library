@@ -11,7 +11,7 @@ class UpdateAuthorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,10 @@ class UpdateAuthorRequest extends FormRequest
      */
     public function rules(): array
     {
+        $authorId = $this->route('author')?->id;
         return [
-            //
+            'name' => 'required|string|max:255|unique:authors,name,' . $authorId,
+            'picture' => 'nullable|image|max:2048',
         ];
     }
 }

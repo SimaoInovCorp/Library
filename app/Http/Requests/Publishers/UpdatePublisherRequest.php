@@ -11,7 +11,7 @@ class UpdatePublisherRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,10 @@ class UpdatePublisherRequest extends FormRequest
      */
     public function rules(): array
     {
+        $publisherId = $this->route('publisher')?->id;
         return [
-            //
+            'name' => 'required|string|max:255|unique:publishers,name,' . $publisherId,
+            'logo' => 'nullable|image|max:2048',
         ];
     }
 }

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Publisher;
+use App\Services\Publishers\PublisherService;
+use App\Services\Publishers\PublisherQueryService;
+use App\Http\Requests\Publishers\StorePublisherRequest;
+use App\Http\Requests\Publishers\UpdatePublisherRequest;
 use Illuminate\Http\Request;
 
 class PublisherController extends Controller
@@ -11,25 +15,18 @@ class PublisherController extends Controller
     /**
      * Display a listing of the publishers.
      */
-    public function index(Request $request)
+    public function index(Request $request, PublisherQueryService $publisherQueryService)
     {
-        $sort = $request->query('sort', 'name');
-        $direction = $request->query('direction', 'asc');
-        $validSorts = ['name'];
-        $validDirections = ['asc', 'desc'];
-        $sort = in_array($sort, $validSorts) ? $sort : 'name';
-        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
-
-        $query = Publisher::query();
-
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%");
-        }
-
-        $publishers = $query->orderBy($sort, $direction)
+        $params = [
+            'sort' => $request->query('sort', 'name'),
+            'direction' => $request->query('direction', 'asc'),
+            'search' => $request->query('search'),
+        ];
+        $publishers = $publisherQueryService->getFilteredPublishers($params)
             ->paginate(10)
             ->appends($request->except('page'));
+        $sort = $params['sort'];
+        $direction = $params['direction'];
         return view('publishers.index', compact('publishers', 'sort', 'direction'));
     }
 
@@ -44,20 +41,9 @@ class PublisherController extends Controller
     /**
      * Store a newly created publisher in storage.
      */
-    public function store(Request $request)
+    public function store(StorePublisherRequest $request, PublisherService $publisherService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:publishers,name',
-            'logo' => 'nullable|image|max:2048',
-        ]);
-
-        $publisher = new Publisher();
-        $publisher->name = $validated['name'];
-        if ($request->hasFile('logo')) {
-            $publisher->logo = $request->file('logo')->store('publishers', 'public');
-        }
-        $publisher->save();
-
+        $publisherService->create($request->validated());
         return redirect()->route('publishers.index')->with('success', 'Publisher created successfully.');
     }
 
@@ -80,28 +66,18 @@ class PublisherController extends Controller
     /**
      * Update the specified publisher in storage.
      */
-    public function update(Request $request, Publisher $publisher)
+    public function update(UpdatePublisherRequest $request, Publisher $publisher, PublisherService $publisherService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:publishers,name,' . $publisher->id,
-            'logo' => 'nullable|image|max:2048',
-        ]);
-
-        $publisher->name = $validated['name'];
-        if ($request->hasFile('logo')) {
-            $publisher->logo = $request->file('logo')->store('publishers', 'public');
-        }
-        $publisher->save();
-
+        $publisherService->update($publisher, $request->validated());
         return redirect()->route('publishers.index')->with('success', 'Publisher updated successfully.');
     }
 
     /**
      * Remove the specified publisher from storage.
      */
-    public function destroy(Publisher $publisher)
+    public function destroy(Publisher $publisher, PublisherService $publisherService)
     {
-        $publisher->delete();
+        $publisherService->delete($publisher);
         return redirect()->route('publishers.index')->with('success', 'Publisher deleted successfully.');
     }
 }
