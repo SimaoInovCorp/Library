@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Books;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidTitleName;
 
 class StoreBookRequest extends FormRequest
 {
@@ -23,7 +24,7 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'isbn' => 'required|string|max:255|unique:books,isbn',
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new ValidTitleName],
             'bibliography' => 'nullable|string',
             'cover_image' => 'nullable|image|max:2048',
             'price' => 'nullable|numeric|min:0',

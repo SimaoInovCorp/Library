@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Publishers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidTitleName;
 
 class StorePublisherRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class StorePublisherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:publishers,name',
+            'name' => ['required', 'string', 'max:255', 'unique:publishers,name', new ValidTitleName],
             'logo' => 'nullable|image|max:2048',
         ];
     }

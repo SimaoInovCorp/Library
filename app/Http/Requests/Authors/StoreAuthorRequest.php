@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Authors;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidAuthorName;
 
 class StoreAuthorRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class StoreAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:authors,name',
+            'name' => ['required', 'string', 'max:255', 'unique:authors,name', new ValidAuthorName],
             'picture' => 'nullable|image|max:2048',
         ];
     }
