@@ -23,6 +23,8 @@
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
                             <x-nav.nav-link href="/" :active="request()->is('/')">Home</x-nav.nav-link>
+
+                            @if(auth()->check() && auth()->user()->is_admin)
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
                                     Library
@@ -30,6 +32,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                                     </svg>
                                 </button>
+
                                 <div x-show="open" @click.away="open = false" class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                                     <div class="py-1">
                                         <a href="/books" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Books</a>
@@ -38,6 +41,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                             <x-nav.nav-link href="/about" :active="request()->is('about')">About</x-nav.nav-link>
                             <x-nav.nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav.nav-link>
                             @guest

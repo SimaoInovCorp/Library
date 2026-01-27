@@ -3,15 +3,20 @@
     <div class="container mx-auto py-4">
         <div class="flex justify-between mb-4">
             <div class="flex gap-2">
-                <a href="{{ route('books.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Add Book</a>
-                <a href="{{ route('books.import.google') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2">
+                <a href="{{ route('books.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg font-bold transition duration-200 ease-in-out transform hover:scale-105">Add Book</a>
+                <a href="{{ route('books.import.google') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2 shadow-lg font-bold transition duration-200 ease-in-out transform hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                     </svg>
                     Import from Google Books
                 </a>
             </div>
-            <a href="{{ route('books.export.csv') }}" class="btn btn-secondary px-4 py-2 rounded">Export CSV</a>
+            <a href="{{ route('books.export.csv') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg font-bold flex items-center gap-2 transition duration-200 ease-in-out transform hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Export CSV
+            </a>
         </div>
         <form method="GET" action="{{ route('books.index') }}" class="mb-4 flex flex-row gap-2">
             <input
@@ -21,7 +26,7 @@
                 placeholder="Search by name or ISBN"
                 class="form-input px-4 py-2 rounded border border-gray-300"
             >
-            <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded">Search</button>
+            <x-buttons.search>Search</x-buttons.search>
             @if(request('search'))
                 <a href="{{ route('books.index', array_filter(request()->except(['search', 'page']))) }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Clear</a>
             @endif
@@ -77,10 +82,14 @@
                         <td class="px-4 py-2 align-middle">{{ $book->copies }}</td>
                         <td class="px-4 py-2 align-middle">
                             <div class="flex flex-row gap-2">
-                                <a href="{{ route('books.show', $book) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded">Details</a>
-                                <a href="{{ route('books.edit', $book) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded">Edit</a>
+                                <form method="GET" action="{{ route('books.show', $book) }}" style="display:inline;">
+                                    <x-buttons.details type="submit">Details</x-buttons.details>
+                                </form>
+                                <form method="GET" action="{{ route('books.edit', $book) }}" style="display:inline;">
+                                    <x-buttons.edit type="submit">Edit</x-buttons.edit>
+                                </form>
                                 <div x-data="{ showModal: false }">
-                                    <x-danger-button type="button" @click="showModal = true">Delete</x-danger-button>
+                                    <x-buttons.danger type="button" @click="showModal = true">Delete</x-buttons.danger>
                                     <form x-ref="deleteForm" action="{{ route('books.destroy', $book) }}" method="POST" class="hidden">
                                         @csrf
                                         @method('DELETE')
@@ -90,8 +99,8 @@
                                             <h2 class="text-lg font-semibold text-gray-900 mb-2">Delete Book</h2>
                                             <p class="mb-4 text-gray-700">Are you sure you want to delete the book <span class="font-bold">{{ $book->name }}</span>? This action cannot be undone.</p>
                                             <div class="flex justify-end gap-2">
-                                                <button type="button" class="btn btn-secondary px-4 py-2 rounded bg-gray-200 text-gray-800" @click="showModal = false">Cancel</button>
-                                                <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded" @click="$refs.deleteForm.submit(); showModal = false;">Delete</button>
+                                                <x-buttons.secondary type="button" @click="showModal = false">Cancel</x-buttons.secondary>
+                                                <x-buttons.danger type="button" @click="$refs.deleteForm.submit(); showModal = false;">Delete</x-buttons.danger>
                                             </div>
                                         </div>
                                     </div>
