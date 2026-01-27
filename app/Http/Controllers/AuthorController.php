@@ -11,6 +11,12 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['show']);
+        $this->middleware(['auth', 'admin'])->except(['show']);
+    }
+
     // Display a listing of the authors filtered and sorted.
     public function index(Request $request, AuthorQueryService $authorQueryService)
     {

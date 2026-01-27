@@ -17,7 +17,8 @@ class BookController extends BaseController
 {
         public function __construct()
         {
-            $this->middleware(['auth', 'admin']);
+            $this->middleware('auth')->only(['show']);
+            $this->middleware(['auth', 'admin'])->except(['show']);
         }
     /**
      * Display a listing of the books.
@@ -66,9 +67,11 @@ class BookController extends BaseController
      */
     public function show(Book $book)
     {
-        $book->load(['publisher', 'authors']);
+        $book->load(['publisher', 'authors', 'reviews.user']);
         $book->loadCount('requisitions');
-        return view('books.show', compact('book'));
+        $averageRating = $book->reviews()->avg('rating');
+        $reviewCount = $book->reviews()->count();
+        return view('books.show', compact('book', 'averageRating', 'reviewCount'));
     }
 
     /**
