@@ -2,7 +2,15 @@
     <x-slot name="heading">Books</x-slot>
     <div class="container mx-auto py-4">
         <div class="flex justify-between mb-4">
-            <a href="{{ route('books.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Add Book</a>
+            <div class="flex gap-2">
+                <a href="{{ route('books.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Add Book</a>
+                <a href="{{ route('books.import.google') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                    </svg>
+                    Import from Google Books
+                </a>
+            </div>
             <a href="{{ route('books.export.csv') }}" class="btn btn-secondary px-4 py-2 rounded">Export CSV</a>
         </div>
         <form method="GET" action="{{ route('books.index') }}" class="mb-4 flex flex-row gap-2">
