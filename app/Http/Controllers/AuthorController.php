@@ -9,6 +9,7 @@ use App\Http\Requests\Authors\StoreAuthorRequest;
 use App\Http\Requests\Authors\UpdateAuthorRequest;
 use Illuminate\Http\Request;
 
+
 class AuthorController extends Controller
 {
     public function __construct()

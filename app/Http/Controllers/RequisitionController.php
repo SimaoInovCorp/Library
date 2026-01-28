@@ -177,4 +177,10 @@ class RequisitionController extends Controller
         });
         return redirect()->back()->with('success', 'Requisition approved and book loaned!');
     }
+
+    public function show(Requisition $requisition)
+    {
+        $requisition->load('book', 'review');
+        return view('requisitions.show', compact('requisition'));
+    }
 }

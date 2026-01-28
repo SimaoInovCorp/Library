@@ -11,9 +11,8 @@ use App\Services\Books\BookFormService;
 use App\Services\ErrorHandlingService;
 use App\Http\Requests\Books\StoreBookRequest;
 use App\Http\Requests\Books\UpdateBookRequest;
-use Illuminate\Routing\Controller as BaseController;
 
-class BookController extends BaseController
+class BookController extends Controller
 {
         public function __construct()
         {

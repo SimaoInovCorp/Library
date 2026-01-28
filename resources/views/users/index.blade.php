@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot name="heading">Users</x-slot>
     <div class="container mx-auto py-4">
-        <a href="{{ route('users.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">Add User</a>
+        <a href="{{ route('users.create') }}" class="inline-block mb-4"><x-buttons.primary>Add User</x-buttons.primary></a>
         <form method="GET" action="{{ route('users.index') }}" class="mb-4 flex flex-row gap-2">
             <input
                 type="text"
@@ -10,7 +10,7 @@
                 placeholder="Search by name or email"
                 class="form-input px-4 py-2 rounded border border-gray-300"
             >
-            <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded">Search</button>
+            <x-buttons.search>Search</x-buttons.search>
             @if(request('search'))
                 <a href="{{ route('users.index', array_filter(request()->except(['search', 'page']))) }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Clear</a>
             @endif
@@ -76,11 +76,15 @@
                         </td>
                         <td class="px-4 py-2 align-middle">
                             <div class="flex flex-row gap-2">
-                                <a href="{{ route('users.show', $user) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded">Details</a>
-                                <a href="{{ route('users.edit', $user) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded">Edit</a>
+                                <form method="GET" action="{{ route('users.show', $user) }}" style="display:inline;">
+                                    <x-buttons.details type="submit">Details</x-buttons.details>
+                                </form>
+                                <form method="GET" action="{{ route('users.edit', $user) }}" style="display:inline;">
+                                    <x-buttons.edit type="submit">Edit</x-buttons.edit>
+                                </form>
                                 @if($user->id !== auth()->id())
                                     <div x-data="{ showModal: false }">
-                                        <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded" @click="showModal = true">Delete</button>
+                                        <x-buttons.danger type="button" @click="showModal = true">Delete</x-buttons.danger>
                                         <form x-ref="deleteForm" action="{{ route('users.destroy', $user) }}" method="POST" class="hidden">
                                             @csrf
                                             @method('DELETE')
@@ -90,8 +94,8 @@
                                                 <h2 class="text-lg font-semibold text-gray-900 mb-2">Delete User</h2>
                                                 <p class="mb-4 text-gray-700">Are you sure you want to delete the user <span class="font-bold">{{ $user->name }}</span>? This action cannot be undone.</p>
                                                 <div class="flex justify-end gap-2">
-                                                    <button type="button" class="btn btn-secondary px-4 py-2 rounded bg-gray-200 text-gray-800" @click="showModal = false">Cancel</button>
-                                                    <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded" @click="$refs.deleteForm.submit(); showModal = false;">Delete</button>
+                                                    <x-buttons.secondary type="button" @click="showModal = false">Cancel</x-buttons.secondary>
+                                                    <x-buttons.danger type="button" @click="$refs.deleteForm.submit(); showModal = false;">Delete</x-buttons.danger>
                                                 </div>
                                             </div>
                                         </div>

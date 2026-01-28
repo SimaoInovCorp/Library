@@ -82,4 +82,9 @@ class Requisition extends Model
     {
         return $this->belongsTo(Book::class);
     }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
 }
