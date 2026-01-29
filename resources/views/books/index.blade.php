@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Books</x-slot>
+    <x-slot name="header">
+        Books
+    </x-slot>
     <div class="container mx-auto py-4">
         <div class="flex justify-between mb-4">
             <div class="flex gap-2">

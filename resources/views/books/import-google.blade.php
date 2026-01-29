@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Import Books from Google Books</x-slot>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Import Books from Google Books</h1>
+    </x-slot>
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-lg overflow-hidden">

@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Requisition Details</x-slot>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Requisition Details</h1>
+    </x-slot>
     <div class="container mx-auto py-4">
         <div class="bg-white shadow rounded p-6 mb-6">
             <h2 class="text-xl font-bold mb-2">Book: {{ $requisition->book->name }}</h2>

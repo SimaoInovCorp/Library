@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading"></x-slot>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900"></h1>
+    </x-slot>
     <style>
         @keyframes agent-move {
             0% { transform: translateX(0); }

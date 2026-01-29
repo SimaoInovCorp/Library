@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Add Publisher</x-slot>
+    <x-slot name="header">
+        Add Publisher
+    </x-slot>
     <div class="container mx-auto py-4">
         <form action="{{ route('publishers.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -13,8 +15,8 @@
                 <input type="file" name="logo" id="logo" class="form-input w-full">
                 @error('logo')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
-            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Create</button>
-            <a href="{{ route('publishers.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</a>
+            <x-buttons.primary type="submit">Create</x-buttons.primary>
+            <x-buttons.secondary href="{{ route('publishers.index') }}">Cancel</x-buttons.secondary>
         </form>
     </div>
 </x-layout>

@@ -18,6 +18,11 @@ class Requisition extends Model
         // 'number' is not fillable, it's set automatically
     ];
 
+    protected $casts = [
+        'requested_at' => 'datetime',
+        'expected_end_at' => 'datetime',
+    ];
+
     protected static function booted()
     {
         static::creating(function ($requisition) {

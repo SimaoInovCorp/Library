@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">User Details</x-slot>
+    <x-slot name="header">
+        User Details
+    </x-slot>
     <div class="container mx-auto py-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <div class="mb-4">

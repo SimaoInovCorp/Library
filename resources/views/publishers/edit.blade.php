@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Edit Publisher</x-slot>
+    <x-slot name="header">
+        Edit Publisher
+    </x-slot>
     <div class="container mx-auto py-4">
         <form action="{{ route('publishers.update', $publisher) }}" method="POST" enctype="multipart/form-data">
             @csrf

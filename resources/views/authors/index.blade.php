@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Authors</x-slot>
+    <x-slot name="header">
+        Authors
+    </x-slot>
     <div class="container mx-auto py-4">
         <a href="{{ route('authors.create') }}" class="inline-block mb-4"><x-buttons.primary>Add Author</x-buttons.primary></a>
         <form method="GET" action="{{ route('authors.index') }}" class="mb-4 flex flex-row gap-2">

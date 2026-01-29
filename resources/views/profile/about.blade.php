@@ -1,7 +1,7 @@
 <x-layout>
-    <x-slot:heading>
-        About Page
-    </x-slot:heading>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">About Page</h1>
+    </x-slot>
 
     <h1 class="text-2xl font-bold mb-4">About This Project</h1>
     <div class="prose max-w-none">

@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Edit Book</x-slot>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Edit Book</h1>
+    </x-slot>
     <div class="container mx-auto py-4">
         <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data">
             @csrf

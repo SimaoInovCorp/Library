@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Add Author</x-slot>
+    <x-slot name="header">
+        Add Author
+    </x-slot>
     <div class="container mx-auto py-4">
         <form action="{{ route('authors.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -13,8 +15,8 @@
                 <input type="file" name="picture" id="picture" class="form-input w-full">
                 @error('picture')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
-            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Create</button>
-            <a href="{{ route('authors.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</a>
+            <x-buttons.primary type="submit">Create</x-buttons.primary>
+            <x-buttons.secondary href="{{ route('authors.index') }}">Cancel</x-buttons.secondary>
         </form>
     </div>
 </x-layout>

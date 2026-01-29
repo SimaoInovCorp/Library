@@ -1,4 +1,7 @@
-<x-layout heading="Notifications">
+<x-layout>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Notifications</h1>
+    </x-slot>
     <div class="max-w-2xl mx-auto py-8">
         <h2 class="text-xl font-bold mb-4">Your Notifications</h2>
         @if(Auth::user()->notifications->count())

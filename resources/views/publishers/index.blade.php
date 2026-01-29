@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Publishers</x-slot>
+    <x-slot name="header">
+        Publishers
+    </x-slot>
     <div class="container mx-auto py-4">
         <a href="{{ route('publishers.create') }}" class="inline-block mb-4"><x-buttons.primary>Add Publisher</x-buttons.primary></a>
         <form method="GET" action="{{ route('publishers.index') }}" class="mb-4 flex flex-row gap-2">

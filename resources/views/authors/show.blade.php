@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Author Details</x-slot>
+    <x-slot name="header">
+        Author Details
+    </x-slot>
     <div class="container mx-auto py-4">
         <div class="mb-4">
             <strong>Name:</strong> {{ $author->name }}

@@ -4,7 +4,6 @@ namespace App\Services\Authors;
 
 use App\Models\Author;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class AuthorService
 {

@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">Add Book</x-slot>
+    <x-slot name="header">
+        Add Book
+    </x-slot>
     <div class="container mx-auto py-4">
         <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -52,8 +54,8 @@
                 </select>
                 @error('authors')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
-            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Create</button>
-            <a href="{{ route('books.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</a>
+            <x-buttons.primary type="submit">Create</x-buttons.primary>
+            <x-buttons.secondary href="{{ route('books.index') }}">Cancel</x-buttons.secondary>
         </form>
     </div>
 </x-layout>
