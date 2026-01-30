@@ -66,8 +66,8 @@
                                         @csrf
                                         @method('DELETE')
                                     </form>
-                                    <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" style="display: none;">
-                                        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                                    <x-modal id="delete-publisher-modal" show="showModal" maxWidth="md">
+                                        <div class="p-6">
                                             <h2 class="text-lg font-semibold text-gray-900 mb-2">Delete Publisher</h2>
                                             <p class="mb-4 text-gray-700">Are you sure you want to delete the publisher <span class="font-bold">{{ $publisher->name }}</span>? This action cannot be undone.</p>
                                             <div class="flex justify-end gap-2">
@@ -75,7 +75,7 @@
                                                 <x-buttons.danger type="button" @click="$refs.deleteForm.submit(); showModal = false;">Delete</x-buttons.danger>
                                             </div>
                                         </div>
-                                    </div>
+                                    </x-modal>
                                 </div>
                             </div>
                         </td>

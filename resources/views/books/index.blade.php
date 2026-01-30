@@ -5,32 +5,31 @@
     <div class="container mx-auto py-4">
         <div class="flex justify-between mb-4">
             <div class="flex gap-2">
-                <a href="{{ route('books.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg font-bold transition duration-200 ease-in-out transform hover:scale-105">Add Book</a>
-                <a href="{{ route('books.import.google') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2 shadow-lg font-bold transition duration-200 ease-in-out transform hover:scale-105">
+                <x-buttons.link :href="route('books.create')">Add Book</x-buttons.link>
+                <x-buttons.link :href="route('books.import.google')" class="bg-green-600 hover:bg-green-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                     </svg>
                     Import from Google Books
-                </a>
+                </x-buttons.link>
             </div>
-            <a href="{{ route('books.export.csv') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-lg font-bold flex items-center gap-2 transition duration-200 ease-in-out transform hover:scale-105">
+            <x-buttons.link :href="route('books.export.csv')">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Export CSV
-            </a>
+            </x-buttons.link>
         </div>
         <form method="GET" action="{{ route('books.index') }}" class="mb-4 flex flex-row gap-2">
-            <input
-                type="text"
+            <x-inputs.text
                 name="search"
-                value="{{ request('search') }}"
+                :value="request('search')"
                 placeholder="Search by name or ISBN"
-                class="form-input px-4 py-2 rounded border border-gray-300"
-            >
+                class="px-4 py-2"
+            />
             <x-buttons.search>Search</x-buttons.search>
             @if(request('search'))
-                <a href="{{ route('books.index', array_filter(request()->except(['search', 'page']))) }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Clear</a>
+                <x-buttons.link :href="route('books.index', array_filter(request()->except(['search', 'page'])))" class="bg-gray-300 hover:bg-gray-400 text-gray-800">Clear</x-buttons.link>
             @endif
             <input type="hidden" name="sort" value="{{ $sort }}">
             <input type="hidden" name="direction" value="{{ $direction }}">
@@ -96,8 +95,8 @@
                                         @csrf
                                         @method('DELETE')
                                     </form>
-                                    <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" style="display: none;">
-                                        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                                    <x-modal id="delete-book-modal" show="showModal" maxWidth="md">
+                                        <div class="p-6">
                                             <h2 class="text-lg font-semibold text-gray-900 mb-2">Delete Book</h2>
                                             <p class="mb-4 text-gray-700">Are you sure you want to delete the book <span class="font-bold">{{ $book->name }}</span>? This action cannot be undone.</p>
                                             <div class="flex justify-end gap-2">
@@ -105,7 +104,7 @@
                                                 <x-buttons.danger type="button" @click="$refs.deleteForm.submit(); showModal = false;">Delete</x-buttons.danger>
                                             </div>
                                         </div>
-                                    </div>
+                                    </x-modal>
                                 </div>
                             </div>
                         </td>
