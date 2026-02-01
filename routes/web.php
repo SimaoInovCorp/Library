@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('home');
+    $featuredReviews = app(\App\Services\Books\ReviewService::class)->getFeaturedReviews(5);
+    return view('home', compact('featuredReviews'));
 })->name('home');
 
 Route::get('/about', function () {
@@ -24,6 +25,11 @@ Route::middleware([
 ])->group(function () {
     Route::resource('books', \App\Http\Controllers\BookController::class);
     Route::get('books/export/csv', [\App\Http\Controllers\BookController::class, 'exportCsv'])->name('books.export.csv');
+
+    // Google Books Import
+    Route::get('books-import/google', [\App\Http\Controllers\GoogleBooksImportController::class, 'index'])->name('books.import.google');
+    Route::get('books-import/google/search', [\App\Http\Controllers\GoogleBooksImportController::class, 'search'])->name('books.import.google.search');
+    Route::post('books-import/google/import', [\App\Http\Controllers\GoogleBooksImportController::class, 'import'])->name('books.import.google.import');
 
     // Book requisition route (for citizens)
     Route::post('books/{book}/requisitions', [\App\Http\Controllers\RequisitionController::class, 'store'])->name('books.requisitions.store');
@@ -69,6 +75,10 @@ Route::middleware([
     Route::get('requisitions', [\App\Http\Controllers\RequisitionController::class, 'index'])->name('requisitions.index');
     Route::post('requisitions/{requisition}/return', [\App\Http\Controllers\RequisitionController::class, 'return'])->name('requisitions.return');
     Route::post('requisitions/{requisition}/approve', [\App\Http\Controllers\RequisitionController::class, 'approve'])->middleware('admin')->name('requisitions.approve');
+    Route::get('requisitions/{requisition}', [\App\Http\Controllers\RequisitionController::class, 'show'])->name('requisitions.show');
+    Route::post('books/{book}/requisitions/{requisition}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'show'])->name('reviews.show');
+    Route::delete('reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 // Admin routes (protected by auth & admin middleware)
@@ -79,6 +89,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // User management routes
     Route::resource('users', \App\Http\Controllers\UserController::class);
+
+    // Review moderation routes
+    Route::get('admin/reviews', [\App\Http\Controllers\ReviewController::class, 'adminIndex'])->name('admin.reviews.index');
+    Route::post('admin/reviews/{review}/approve', [\App\Http\Controllers\ReviewController::class, 'approve'])->name('admin.reviews.approve');
+    Route::post('admin/reviews/{review}/reject', [\App\Http\Controllers\ReviewController::class, 'reject'])->name('admin.reviews.reject');
 });
 
 // Notifications routes

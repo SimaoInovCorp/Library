@@ -36,4 +36,17 @@ class Book extends Model
     {
         return $this->hasMany(Requisition::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get only active (approved) reviews for this book.
+     */
+    public function activeReviews()
+    {
+        return $this->hasMany(Review::class)->where('status', Review::STATUS_ACTIVE);
+    }
 }
