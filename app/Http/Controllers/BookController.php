@@ -66,10 +66,10 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book->load(['publisher', 'authors', 'reviews.user']);
+        $book->load(['publisher', 'authors', 'activeReviews.user']);
         $book->loadCount('requisitions');
-        $averageRating = $book->reviews()->avg('rating');
-        $reviewCount = $book->reviews()->count();
+        $averageRating = $book->activeReviews()->avg('rating');
+        $reviewCount = $book->activeReviews()->count();
         return view('books.show', compact('book', 'averageRating', 'reviewCount'));
     }
 

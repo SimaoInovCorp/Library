@@ -7,6 +7,8 @@ use App\Models\Requisition;
 use App\Models\Book;
 use App\Models\User;
 use App\Notifications\ReviewCreatedNotification;
+use App\Notifications\ReviewApprovedNotification;
+use App\Notifications\ReviewRejectedNotification;
 
 class ReviewService
 {
@@ -74,6 +76,13 @@ class ReviewService
     public function approve(Review $review): Review
     {
         $review->update(['status' => Review::STATUS_ACTIVE]);
+
+        // Load relationships for the notification
+        $review->load(['book', 'user']);
+
+        // Notify the review owner that their review was approved
+        $review->user->notify(new ReviewApprovedNotification($review));
+
         return $review;
     }
 
@@ -86,6 +95,13 @@ class ReviewService
             'status' => Review::STATUS_REJECTED,
             'rejection_reason' => $reason,
         ]);
+
+        // Load relationships for the notification
+        $review->load(['book', 'user']);
+
+        // Notify the review owner that their review was rejected
+        $review->user->notify(new ReviewRejectedNotification($review));
+
         return $review;
     }
 }
