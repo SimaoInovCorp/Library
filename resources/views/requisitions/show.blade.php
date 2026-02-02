@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot name="header">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Requisition Details</h1>
+        Requisition Details
     </x-slot>
     <div class="container mx-auto py-4">
         <div class="bg-white shadow rounded p-6 mb-6">

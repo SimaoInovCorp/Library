@@ -16,6 +16,8 @@ Route::get('/contact', function () {
     return view('profile.contact');
 })->name('profile.contact');
 
+// Contact form submission route
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'submit'])->name('contact.submit');
 
 // Book CRUD routes (protected by auth & verified middleware)
 Route::middleware([
@@ -35,7 +37,6 @@ Route::middleware([
     Route::post('books/{book}/requisitions', [\App\Http\Controllers\RequisitionController::class, 'store'])->name('books.requisitions.store');
 });
 
-
 // Publisher CRUD routes (protected by auth & verified middleware)
 Route::middleware([
     'auth:sanctum',
@@ -44,7 +45,6 @@ Route::middleware([
 ])->group(function () {
     Route::resource('publishers', \App\Http\Controllers\PublisherController::class);
 });
-
 
 // Author CRUD routes (protected by auth & verified middleware)
 Route::middleware([

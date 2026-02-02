@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot name="header">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Import Books from Google Books</h1>
+        Import Books from Google Books
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -93,9 +93,9 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($searchResults as $book)
-                                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
                                     <!-- Book Cover -->
-                                    <div class="h-64 bg-gray-100 flex items-center justify-center">
+                                    <div class="h-64 bg-gray-100 flex items-center justify-center flex-shrink-0">
                                         @if($book['thumbnail_url'])
                                             <img
                                                 src="{{ $book['thumbnail_url'] }}"
@@ -110,49 +110,61 @@
                                     </div>
 
                                     <!-- Book Details -->
-                                    <div class="p-4">
-                                        <h4 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2" title="{{ $book['title'] }}">
+                                    <div class="p-4 flex flex-col flex-grow">
+                                        <h4 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]" title="{{ $book['title'] }}">
                                             {{ $book['title'] }}
                                         </h4>
 
                                         <div class="text-sm text-gray-600 space-y-1 mb-3">
-                                            @if(!empty($book['authors']))
-                                                <p class="line-clamp-1">
+                                            <p class="line-clamp-1 min-h-[1.25rem]">
+                                                @if(!empty($book['authors']))
                                                     <span class="font-semibold">Authors:</span>
                                                     {{ implode(', ', $book['authors']) }}
-                                                </p>
-                                            @endif
+                                                @else
+                                                    <span class="text-gray-400">Authors: N/A</span>
+                                                @endif
+                                            </p>
 
-                                            @if($book['publisher'])
-                                                <p class="line-clamp-1">
+                                            <p class="line-clamp-1 min-h-[1.25rem]">
+                                                @if($book['publisher'])
                                                     <span class="font-semibold">Publisher:</span>
                                                     {{ $book['publisher'] }}
-                                                </p>
-                                            @endif
+                                                @else
+                                                    <span class="text-gray-400">Publisher: N/A</span>
+                                                @endif
+                                            </p>
 
-                                            @if($book['isbn'])
-                                                <p>
+                                            <p class="min-h-[1.25rem]">
+                                                @if($book['isbn'])
                                                     <span class="font-semibold">ISBN:</span>
                                                     {{ $book['isbn'] }}
-                                                </p>
-                                            @endif
+                                                @else
+                                                    <span class="text-gray-400">ISBN: N/A</span>
+                                                @endif
+                                            </p>
 
                                             @if($book['price'])
-                                                <p>
+                                                <p class="min-h-[1.25rem]">
                                                     <span class="font-semibold">Price:</span>
                                                     {{ $book['currency_code'] ?? '' }} {{ number_format($book['price'], 2) }}
                                                 </p>
                                             @endif
                                         </div>
 
-                                        @if($book['description'])
-                                            <p class="text-sm text-gray-500 line-clamp-3 mb-4">
-                                                {{ $book['description'] }}
-                                            </p>
-                                        @endif
+                                        <div class="mb-4 flex-grow">
+                                            @if($book['description'])
+                                                <p class="text-sm text-gray-500 line-clamp-3">
+                                                    {{ $book['description'] }}
+                                                </p>
+                                            @else
+                                                <p class="text-sm text-gray-400 italic">
+                                                    No description available
+                                                </p>
+                                            @endif
+                                        </div>
 
                                         <!-- Import Form -->
-                                        <form method="POST" action="{{ route('books.import.google.import') }}" class="space-y-3">
+                                        <form method="POST" action="{{ route('books.import.google.import') }}" class="space-y-3 mt-auto">
                                             @csrf
                                             <input type="hidden" name="volume_id" value="{{ $book['volume_id'] }}">
                                             <input type="hidden" name="isbn" value="{{ $book['isbn'] }}">

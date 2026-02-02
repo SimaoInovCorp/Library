@@ -55,7 +55,7 @@
                         <td class="px-4 py-2 align-middle">
                             <div class="flex flex-row gap-2">
                                 <form method="GET" action="{{ route('authors.show', $author) }}" style="display:inline;">
-                                    <x-buttons.details type="submit">View</x-buttons.details>
+                                    <x-buttons.details type="submit">Details</x-buttons.details>
                                 </form>
                                 <form method="GET" action="{{ route('authors.edit', $author) }}" style="display:inline;">
                                     <x-buttons.edit type="submit">Edit</x-buttons.edit>

@@ -1,5 +1,7 @@
 <x-layout>
-    <x-slot name="heading">My Requests</x-slot>
+    <x-slot name="header">
+        My Requests
+    </x-slot>
     <div class="container mx-auto py-4">
         <!-- Indicators Section -->
         <div class="flex flex-wrap gap-4 mb-8">
@@ -117,6 +119,9 @@
                                     ">
                                         {{ $status }}
                                     </span>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <a href="{{ route('requisitions.show', $req) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm">Details / Review</a>
                                 </td>
                             </tr>
                         @endforeach
