@@ -1,46 +1,50 @@
 <x-layout>
     <x-slot name="header">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Edit Book</h1>
+        Edit Book
     </x-slot>
     <div class="container mx-auto py-4">
         <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data">
+            <div class="flex gap-2 justify-end mb-6">
+                <x-buttons.primary type="submit">Update</x-buttons.primary>
+                <x-buttons.secondary href="{{ route('books.index') }}">Cancel</x-buttons.secondary>
+            </div>
             @csrf
             @method('PUT')
             <div class="mb-4">
-                <label for="isbn" class="block">ISBN</label>
-                <input type="text" name="isbn" id="isbn" class="form-input w-full" value="{{ old('isbn', $book->isbn) }}" required>
+                <x-labels.pretty for="isbn" value="ISBN" />
+                <x-inputs.text name="isbn" :value="old('isbn', $book->isbn)" required />
                 @error('isbn')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="name" class="block">Name</label>
-                <input type="text" name="name" id="name" class="form-input w-full" value="{{ old('name', $book->name) }}" required>
+                <x-labels.pretty for="name" value="Name" />
+                <x-inputs.text name="name" :value="old('name', $book->name)" required />
                 @error('name')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="bibliography" class="block">Bibliography</label>
-                <textarea name="bibliography" id="bibliography" class="form-input w-full">{{ old('bibliography', $book->bibliography) }}</textarea>
+                <x-labels.pretty for="bibliography" value="Bibliography" />
+                <x-inputs.textarea name="bibliography" :id="'bibliography'">{{ old('bibliography', $book->bibliography) }}</x-inputs.textarea>
                 @error('bibliography')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="cover_image" class="block">Cover Image</label>
-                <input type="file" name="cover_image" id="cover_image" class="form-input w-full">
+                <x-labels.pretty for="cover_image" value="Cover Image" />
+                <x-inputs.file name="cover_image" />
                 @if($book->cover_image)
                     <img src="{{ asset('storage/' . $book->cover_image) }}" alt="Cover" class="h-8 mt-2">
                 @endif
                 @error('cover_image')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="price" class="block">Price</label>
-                <input type="number" step="0.01" name="price" id="price" class="form-input w-full" value="{{ old('price', $book->price) }}">
+                <x-labels.pretty for="price" value="Price" />
+                <x-inputs.number name="price" step="0.01" :value="old('price', $book->price)" />
                 @error('price')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="copies" class="block">Copies</label>
-                <input type="number" name="copies" id="copies" class="form-input w-full" value="{{ old('copies', $book->copies) }}" min="0" required>
+                <x-labels.pretty for="copies" value="Copies" />
+                <x-inputs.number name="copies" :value="old('copies', $book->copies)" min="0" required />
                 @error('copies')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="publisher_id" class="block">Publisher</label>
+                <x-labels.pretty for="publisher_id" value="Publisher" />
                 <select name="publisher_id" id="publisher_id" class="form-input w-full" required>
                     <option value="">Select Publisher</option>
                     @foreach($publishers as $publisher)
@@ -50,7 +54,7 @@
                 @error('publisher_id')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="authors" class="block">Authors</label>
+                <x-labels.pretty for="authors" value="Authors" />
                 <select name="authors[]" id="authors" class="form-input w-full" multiple required>
                     @foreach($authors as $author)
                         <option value="{{ $author->id }}" @selected(collect(old('authors', $book->authors->pluck('id')))->contains($author->id))>{{ $author->name }}</option>
@@ -58,8 +62,6 @@
                 </select>
                 @error('authors')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
-            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Update</button>
-            <a href="{{ route('books.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</a>
         </form>
     </div>
 </x-layout>

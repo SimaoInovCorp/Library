@@ -3,18 +3,21 @@
         Author Details
     </x-slot>
     <div class="container mx-auto py-4">
-        <div class="mb-4">
-            <strong>Name:</strong> {{ $author->name }}
+        <div class="flex gap-2 justify-end mb-6">
+            <x-buttons.primary href="{{ route('authors.edit', $author) }}">Edit</x-buttons.primary>
+            <x-buttons.secondary href="{{ route('authors.index') }}">Back</x-buttons.secondary>
         </div>
         <div class="mb-4">
-            <strong>Picture:</strong>
+            <x-labels.pretty value="Name" />
+            {{ $author->name }}
+        </div>
+        <div class="mb-4">
+            <x-labels.pretty value="Picture" />
             @if($author->picture)
                 <img src="{{ asset('storage/' . $author->picture) }}" alt="Picture" class="h-12">
             @else
                 <span>No picture uploaded.</span>
             @endif
         </div>
-        <a href="{{ route('authors.edit', $author) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
-        <a href="{{ route('authors.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back</a>
     </div>
 </x-layout>

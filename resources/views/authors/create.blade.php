@@ -6,12 +6,12 @@
         <form action="{{ route('authors.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-4">
-                <label for="name" class="block">Name</label>
+                <x-labels.pretty for="name" value="Name" />
                 <input type="text" name="name" id="name" class="form-input w-full" value="{{ old('name') }}" required>
                 @error('name')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
-                <label for="picture" class="block">Picture</label>
+                <x-labels.pretty for="picture" value="Picture" />
                 <input type="file" name="picture" id="picture" class="form-input w-full">
                 @error('picture')<div class="text-red-500">{{ $message }}</div>@enderror
             </div>

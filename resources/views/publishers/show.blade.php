@@ -3,18 +3,21 @@
         Publisher Details
     </x-slot>
     <div class="container mx-auto py-4">
-        <div class="mb-4">
-            <strong>Name:</strong> {{ $publisher->name }}
+        <div class="flex gap-2 justify-end mb-6">
+            <x-buttons.primary href="{{ route('publishers.edit', $publisher) }}">Edit</x-buttons.primary>
+            <x-buttons.secondary href="{{ route('publishers.index') }}">Back</x-buttons.secondary>
         </div>
         <div class="mb-4">
-            <strong>Logo:</strong>
+            <x-labels.pretty value="Name" />
+            {{ $publisher->name }}
+        </div>
+        <div class="mb-4">
+            <x-labels.pretty value="Logo" />
             @if($publisher->logo)
                 <img src="{{ asset('storage/' . $publisher->logo) }}" alt="Logo" class="h-12">
             @else
                 <span>No logo uploaded.</span>
             @endif
         </div>
-        <a href="{{ route('publishers.edit', $publisher) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
-        <a href="{{ route('publishers.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back</a>
     </div>
 </x-layout>
