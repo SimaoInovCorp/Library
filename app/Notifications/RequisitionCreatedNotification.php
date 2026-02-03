@@ -3,15 +3,11 @@
 namespace App\Notifications;
 
 use App\Models\Requisition;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class RequisitionCreatedNotification extends Notification
 {
-    use Queueable;
-
     protected Requisition $requisition;
 
     /**

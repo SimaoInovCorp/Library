@@ -3,15 +3,11 @@
 namespace App\Notifications;
 
 use App\Models\Book;
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class BookAvailableNotification extends Notification implements ShouldQueue
+class BookAvailableNotification extends Notification
 {
-    use Queueable;
-
     public Book $book;
 
     public function __construct(Book $book)

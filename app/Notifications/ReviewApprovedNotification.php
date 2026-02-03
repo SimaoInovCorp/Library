@@ -3,14 +3,11 @@
 namespace App\Notifications;
 
 use App\Models\Review;
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class ReviewApprovedNotification extends Notification
 {
-    use Queueable;
-
     protected Review $review;
 
     /**
