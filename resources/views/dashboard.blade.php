@@ -18,6 +18,9 @@
                         <a href="{{ route('users.index') }}" class="bg-yellow-400 text-black font-bold px-6 py-3 rounded shadow-md inline-block transition duration-150 border border-black">
                             Manage Users
                         </a>
+                        <a href="{{ route('admin.reviews.index') }}" class="bg-yellow-400 text-black font-bold px-6 py-3 rounded shadow-md inline-block transition duration-150 border border-black">
+                            Moderate Reviews
+                        </a>
                     @endif
                 </div>
             </div>

@@ -38,6 +38,7 @@
                                         <a href="/books" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Books</a>
                                         <a href="/publishers" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Publishers</a>
                                         <a href="/authors" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Authors</a>
+                                        <a href="{{ route('admin.reviews.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Reviews</a>
                                     </div>
                                 </div>
                             </div>
@@ -168,11 +169,15 @@
         </div>
     </nav>
 
-    <header class="bg-white shadow">
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    @if(isset($header))
+        <x-page.header>
+            {{ $header }}
+        </x-page.header>
+    @elseif(isset($heading))
+        <x-page.header>
             <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $heading }}</h1>
-        </div>
-    </header>
+        </x-page.header>
+    @endif
 
     <main>
         <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">

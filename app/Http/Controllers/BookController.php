@@ -8,6 +8,7 @@ use App\Services\Books\BookQueryService;
 use App\Services\Books\BookService;
 use App\Services\Books\BookExportService;
 use App\Services\Books\BookFormService;
+use App\Services\Books\BookRecommendationService;
 use App\Services\ErrorHandlingService;
 use App\Http\Requests\Books\StoreBookRequest;
 use App\Http\Requests\Books\UpdateBookRequest;
@@ -64,13 +65,19 @@ class BookController extends Controller
     /**
      * Display the specified book.
      */
-    public function show(Book $book)
+    public function show(Book $book, BookRecommendationService $recommendationService)
     {
         $book->load(['publisher', 'authors', 'activeReviews.user']);
         $book->loadCount('requisitions');
+        // Calculate average rating
         $averageRating = $book->activeReviews()->avg('rating');
+        // Count of active reviews
         $reviewCount = $book->activeReviews()->count();
-        return view('books.show', compact('book', 'averageRating', 'reviewCount'));
+
+        // Get related books based on bibliography similarity
+        $relatedBooks = $recommendationService->getRelatedBooks($book, 5);
+
+        return view('books.show', compact('book', 'averageRating', 'reviewCount', 'relatedBooks'));
     }
 
     /**
