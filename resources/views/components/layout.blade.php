@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Website</title>
+    <title>InovCorp Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for interactive UI -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -25,23 +25,23 @@
                             <x-nav.nav-link href="/" :active="request()->is('/')">Home</x-nav.nav-link>
 
                             @if(auth()->check() && auth()->user()->is_admin)
-                            <div x-data="{ open: false }" class="relative">
-                                <button @click="open = !open" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
-                                    Library
-                                    <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </button>
-
-                                <div x-show="open" @click.away="open = false" class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                                    <div class="py-1">
-                                        <a href="/books" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Books</a>
-                                        <a href="/publishers" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Publishers</a>
-                                        <a href="/authors" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Authors</a>
-                                        <a href="{{ route('admin.reviews.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Reviews</a>
-                                    </div>
-                                </div>
-                            </div>
+                            <x-dropdown align="left" width="48">
+                                <x-slot name="trigger">
+                                    <button class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                                        Library
+                                        <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                    </button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link href="/books">Books</x-dropdown-link>
+                                    <x-dropdown-link href="/publishers">Publishers</x-dropdown-link>
+                                    <x-dropdown-link href="/authors">Authors</x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('admin.reviews.index') }}">Reviews</x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('admin.orders.index') }}">Orders</x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
                             @endif
                             <x-nav.nav-link href="/about" :active="request()->is('about')">About</x-nav.nav-link>
                             <x-nav.nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav.nav-link>
@@ -72,6 +72,14 @@
                         </div>
                         @endauth
 
+                        <!-- Cart Button (Desktop) -->
+                        @auth
+                            @if(!Auth::user()->is_admin)
+                                <div class="mr-4">
+                                    <x-cart.button :count="Auth::user()->cart ? Auth::user()->cart->total_items : 0" />
+                                </div>
+                            @endif
+                        @endauth
 
                         <!-- Notification Bell -->
                         @auth
@@ -114,15 +122,7 @@
                         @endauth
 
                         <!-- Profile dropdown -->
-                        <div class="relative ml-3">
-                            <div>
-                                <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                    <span class="absolute -inset-1.5"></span>
-                                    <span class="sr-only">Open user menu</span>
-                                    <img class="h-8 w-8 rounded-full" src="https://www.svgrepo.com/show/164239/bookshelf.svg" alt="">
-                                </button>
-                            </div>
-                        </div>
+                        <x-profile.dropdown />
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
@@ -150,6 +150,21 @@
                 <a href="/" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Home</a>
                 <a href="/about" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">About</a>
                 <a href="/contact" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Contact</a>
+                @auth
+                    @if(!Auth::user()->is_admin)
+                        <a href="{{ route('cart.index') }}" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+                            <span class="inline-flex items-center">
+                                <svg class="w-5 h-5 mr-1 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 007.5 19h9a2 2 0 001.85-1.3L17 13M7 13V6a1 1 0 011-1h5a1 1 0 011 1v7" />
+                                </svg>
+                                Cart
+                                @if(Auth::user()->cart && Auth::user()->cart->total_items > 0)
+                                    <span class="ml-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.5em] text-center">{{ Auth::user()->cart->total_items }}</span>
+                                @endif
+                            </span>
+                        </a>
+                    @endif
+                @endauth
             </div>
             <div class="border-t border-gray-700 pb-3 pt-4">
                 <div class="flex items-center px-5">
