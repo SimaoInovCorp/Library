@@ -86,9 +86,7 @@
                                 <form method="GET" action="{{ route('books.show', $book) }}" style="display:inline;">
                                     <x-buttons.details type="submit">Details</x-buttons.details>
                                 </form>
-                                <form method="GET" action="{{ route('books.edit', $book) }}" style="display:inline;">
-                                    <x-buttons.edit type="submit">Edit</x-buttons.edit>
-                                </form>
+                                <x-buttons.edit href="{{ route('books.edit', $book) }}">Edit</x-buttons.edit>
                                 <div x-data="{ showModal: false }">
                                     <x-buttons.danger type="button" @click="showModal = true">Delete</x-buttons.danger>
                                     <form x-ref="deleteForm" action="{{ route('books.destroy', $book) }}" method="POST" class="hidden">
