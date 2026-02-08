@@ -19,14 +19,10 @@
             </div>
         </div>
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
+            <x-toast type="success">{{ session('success') }}</x-toast>
         @endif
         @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {{ session('error') }}
-            </div>
+            <x-toast type="error">{{ session('error') }}</x-toast>
         @endif
 
         <!-- Available Books Section -->
@@ -57,9 +53,7 @@
                                 <td class="px-4 py-2">
                                     <form action="{{ route('books.requisitions.store', $book) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                            Request Loan
-                                        </button>
+                                        <x-buttons.request>Request Loan</x-buttons.request>
                                     </form>
                                 </td>
                             </tr>
