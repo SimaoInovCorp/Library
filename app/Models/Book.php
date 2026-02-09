@@ -49,4 +49,20 @@ class Book extends Model
     {
         return $this->hasMany(Review::class)->where('status', Review::STATUS_ACTIVE);
     }
+
+    /**
+     * Get cart items for this book.
+     */
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    /**
+     * Get order items for this book.
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
