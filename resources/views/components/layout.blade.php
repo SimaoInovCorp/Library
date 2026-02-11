@@ -175,10 +175,12 @@
                     <div class="flex-shrink-0">
                         <img class="h-10 w-10 rounded-full" src="https://www.svgrepo.com/show/164239/bookshelf.svg" alt="">
                     </div>
-                    <div class="ml-3">
-                        <div class="text-base font-medium leading-none text-white">Simao Morais</div>
-                        <div class="text-sm font-medium leading-none text-gray-400">simaoMorais@InovCorp.com</div>
-                    </div>
+                    @auth
+                        <div class="ml-3">
+                            <div class="text-base font-medium leading-none text-white">{{ Auth::user()->name }}</div>
+                            <div class="text-sm font-medium leading-none text-gray-400">{{ Auth::user()->email }}</div>
+                        </div>
+                    @endauth
                     @auth
                         <div class="md:hidden ml-auto" style="z-index:60;">
                             <x-dropdown align="right" width="48" dropdownClasses="mt-2">
@@ -190,7 +192,6 @@
                                 </x-slot>
                                 <x-slot name="content">
                                     <x-dropdown-link href="{{ route('profile.show') }}">Profile</x-dropdown-link>
-                                    <x-dropdown-link href="#">Settings</x-dropdown-link>
                                     <form method="POST" action="{{ route('logout') }}" x-data>
                                         @csrf
                                         <x-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">

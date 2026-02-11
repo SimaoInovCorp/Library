@@ -19,6 +19,14 @@
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                {{-- Cart Button (Desktop) --}}
+                @auth
+                    @if(!auth()->user()->is_admin)
+                        <div class="me-4">
+                            <x-cart.button :count="auth()->user()->cart ? auth()->user()->cart->total_items : 0" />
+                        </div>
+                    @endif
+                @endauth
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
@@ -138,10 +146,27 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            {{-- Cart Button (Mobile) --}}
+            @auth
+                @if(!auth()->user()->is_admin)
+                    <x-responsive-nav-link href="{{ route('cart.index') }}">
+                        <span class="inline-flex items-center">
+                            <svg class="w-5 h-5 mr-1 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 007.5 19h9a2 2 0 001.85-1.3L17 13M7 13V6a1 1 0 011-1h5a1 1 0 011 1v7" />
+                            </svg>
+                            Cart
+                            @if(auth()->user()->cart && auth()->user()->cart->total_items > 0)
+                                <span class="ml-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.5em] text-center">{{ auth()->user()->cart->total_items }}</span>
+                            @endif
+                        </span>
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
