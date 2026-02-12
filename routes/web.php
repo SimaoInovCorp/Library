@@ -94,6 +94,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/reviews', [\App\Http\Controllers\ReviewController::class, 'adminIndex'])->name('admin.reviews.index');
     Route::post('admin/reviews/{review}/approve', [\App\Http\Controllers\ReviewController::class, 'approve'])->name('admin.reviews.approve');
     Route::post('admin/reviews/{review}/reject', [\App\Http\Controllers\ReviewController::class, 'reject'])->name('admin.reviews.reject');
+
+    // Admin Order Management
+    Route::get('admin/orders', [\App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('admin/orders/{order}', [\App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.orders.show');
+    Route::post('admin/orders/{order}/cancel', [\App\Http\Controllers\Admin\AdminOrderController::class, 'cancel'])->name('admin.orders.cancel');
 });
 
 // Notifications routes
@@ -107,3 +112,30 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         return back();
     })->name('notifications.markAsRead');
 });
+
+// Shopping Cart routes (for regular users only, not admins)
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+    Route::post('cart', [\App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
+    Route::put('cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+    Route::delete('cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
+});
+
+// Checkout routes (for regular users only, not admins)
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('checkout/step1', [\App\Http\Controllers\CheckoutController::class, 'step1'])->name('checkout.step1');
+    Route::get('checkout/step2', [\App\Http\Controllers\CheckoutController::class, 'step2'])->name('checkout.step2');
+    Route::post('checkout/address', [\App\Http\Controllers\CheckoutController::class, 'saveAddress'])->name('checkout.saveAddress');
+    Route::get('checkout/payment/{order}', [\App\Http\Controllers\CheckoutController::class, 'step3'])->name('checkout.step3');
+    Route::post('checkout/payment/{order}/process', [\App\Http\Controllers\CheckoutController::class, 'processPayment'])->name('checkout.processPayment');
+});
+
+// Order routes (for regular users to view their orders)
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+});
+
+// Stripe Webhook (no CSRF protection, no auth)
+Route::post('stripe/webhook', [\App\Http\Controllers\StripeWebhookController::class, 'handle'])->name('stripe.webhook');
