@@ -13,6 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:send-due-requisition-reminders')->dailyAt('08:00');
+
+        // Check for abandoned carts every 15 minutes
+        $schedule->job(new \App\Jobs\CheckAbandonedCartsJob)->everyFifteenMinutes();
     }
 
     /**
