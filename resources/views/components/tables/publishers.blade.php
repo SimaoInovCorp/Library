@@ -1,9 +1,9 @@
 @props(['publishers', 'sort' => null, 'direction' => null])
 
-<table class="table-auto w-full">
+<table class="table-auto w-full border-gray-200 border shadow">
     <thead>
         <tr>
-            <th class="px-4 py-2 text-left">
+            <th class="px-4 py-2 text-left bg-blue-100">
                 @php
                     $isSorted = (isset($sort) && $sort === 'name');
                     $nextDirection = ($isSorted && isset($direction) && $direction === 'asc') ? 'desc' : 'asc';
@@ -19,13 +19,13 @@
                     @endif
                 </a>
             </th>
-            <th class="px-4 py-2 text-left">Logo</th>
-            <th class="px-4 py-2 text-left">Actions</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Logo</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach($publishers as $publisher)
-            <tr>
+            <tr class="even:bg-blue-50 hover:bg-blue-100">
                 <td class="px-4 py-2 align-middle">{{ $publisher->name }}</td>
                 <td class="px-4 py-2 align-middle">
                     <x-image-display :src="$publisher->logo" alt="Logo" />

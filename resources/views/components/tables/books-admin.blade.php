@@ -1,10 +1,10 @@
 @props(['books', 'sort' => null, 'direction' => null])
 
-<table class="table-auto w-full">
+<table class="table-auto w-full border-gray-200 border shadow">
     <thead>
         <tr>
-            <th class="px-4 py-2 text-left">ISBN</th>
-            <th class="px-4 py-2 text-left">
+            <th class="px-4 py-2 text-left bg-blue-100">ISBN</th>
+            <th class="px-4 py-2 text-left bg-blue-100">
                 @php
                     $isSorted = (isset($sort) && $sort === 'name');
                     $nextDirection = ($isSorted && isset($direction) && $direction === 'asc') ? 'desc' : 'asc';
@@ -20,17 +20,17 @@
                     @endif
                 </a>
             </th>
-            <th class="px-4 py-2 text-left">Publisher</th>
-            <th class="px-4 py-2 text-left">Authors</th>
-            <th class="px-4 py-2 text-left">Cover</th>
-            <th class="px-4 py-2 text-left">Price</th>
-            <th class="px-4 py-2 text-left">Copies</th>
-            <th class="px-4 py-2 text-left">Actions</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Publisher</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Authors</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Cover</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Price</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Copies</th>
+            <th class="px-4 py-2 text-left bg-blue-100">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach($books as $book)
-            <tr>
+            <tr class="even:bg-blue-50 hover:bg-blue-100">
                 <td class="px-4 py-2 align-middle">{{ $book->isbn }}</td>
                 <td class="px-4 py-2 align-middle">{{ $book->name }}</td>
                 <td class="px-4 py-2 align-middle">{{ $book->publisher->name ?? '-' }}</td>
