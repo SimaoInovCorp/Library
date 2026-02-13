@@ -4,20 +4,7 @@
     </x-slot>
     <div class="container mx-auto py-4">
         <!-- Indicators Section -->
-        <div class="flex flex-wrap gap-4 mb-8">
-            <div class="bg-blue-100 border border-blue-400 text-blue-800 px-6 py-4 rounded shadow">
-                <div class="font-bold text-lg">Active requisitions</div>
-                <div class="text-2xl">{{ $activeCount }}</div>
-            </div>
-            <div class="bg-green-100 border border-green-400 text-green-800 px-6 py-4 rounded shadow">
-                <div class="font-bold text-lg">Requisitions in the last 30 days</div>
-                <div class="text-2xl">{{ $last30DaysCount }}</div>
-            </div>
-            <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-6 py-4 rounded shadow">
-                <div class="font-bold text-lg">Books returned today</div>
-                <div class="text-2xl">{{ $returnedTodayCount }}</div>
-            </div>
-        </div>
+        <x-tables.indicators :active-count="$activeCount" :last-30-days-count="$last30DaysCount" :returned-today-count="$returnedTodayCount" />
         @if(session('success'))
             <x-toast type="success">{{ session('success') }}</x-toast>
         @endif
@@ -27,100 +14,21 @@
 
         <!-- Available Books Section -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Available Books</h2>
+            <h2 class="text-2xl font-semibold tracking-tight text-gray-800 border-l-4 border-blue-200 pl-2 mb-4 font-bold mb-4">Available Books</h2>
             @if($availableBooks->count())
-                <table class="table-auto w-full mb-4">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2 text-left">ISBN</th>
-                            <th class="px-4 py-2 text-left">Name</th>
-                            <th class="px-4 py-2 text-left">Publisher</th>
-                            <th class="px-4 py-2 text-left">Authors</th>
-                            <th class="px-4 py-2 text-left">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($availableBooks as $book)
-                            <tr>
-                                <td class="px-4 py-2">{{ $book->isbn }}</td>
-                                <td class="px-4 py-2">{{ $book->name }}</td>
-                                <td class="px-4 py-2">{{ $book->publisher->name ?? '-' }}</td>
-                                <td class="px-4 py-2">
-                                    @foreach($book->authors as $author)
-                                        <span class="badge">{{ $author->name }}</span>
-                                    @endforeach
-                                </td>
-                                <td class="px-4 py-2">
-                                    <form action="{{ route('books.requisitions.store', $book) }}" method="POST" class="inline">
-                                        @csrf
-                                        <x-buttons.request>Request Loan</x-buttons.request>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <x-tables.available-books :books="$availableBooks" />
                 {{ $availableBooks->links() }}
             @else
                 <p class="text-gray-600">No available books at the moment.</p>
             @endif
         </div>
 
-        <!-- My Requests Section -->
+        <!-- My book Requests Section -->
         <div>
-            <h2 class="text-2xl font-bold mb-4">My Book Requests</h2>
+            <h2 class="text-2xl font-semibold tracking-tight text-gray-800 border-l-4 border-blue-200 pl-2 mb-4 font-bold mb-4">My Book Requests</h2>
             @if($requisitions->count())
-                <table class="table-auto w-full mb-4">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2 text-left">#</th>
-                            <th class="px-4 py-2 text-left">Book</th>
-                            <th class="px-4 py-2 text-left">Status</th>
-                            <th class="px-4 py-2 text-left">Requested At</th>
-                            <th class="px-4 py-2 text-left">Expected End</th>
-                            <th class="px-4 py-2 text-left">Due</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($requisitions as $req)
-                            <tr>
-                                <td class="px-4 py-2">{{ $req->number ?? '-' }}</td>
-                                <td class="px-4 py-2">{{ $req->book->name ?? '-' }}</td>
-                                <td class="px-4 py-2">
-                                    <span class="px-2 py-1 rounded text-sm
-                                        {{ $req->status === 'pending' ? 'bg-yellow-200 text-yellow-800' : '' }}
-                                        {{ $req->status === 'approved' ? 'bg-green-200 text-green-800' : '' }}
-                                        {{ $req->status === 'rejected' ? 'bg-red-200 text-red-800' : '' }}">
-                                        {{ ucfirst($req->status) }}
-                                    </span>
-                                    @if($req->status === 'approved')
-                                        <form action="{{ route('requisitions.return', $req) }}" method="POST" class="inline ml-2">
-                                            @csrf
-                                            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm">Return</button>
-                                        </form>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-2">{{ $req->requested_at ? \Carbon\Carbon::parse($req->requested_at)->format('Y-m-d H:i') : '-' }}</td>
-                                <td class="px-4 py-2">{{ $req->expected_end_at ? \Carbon\Carbon::parse($req->expected_end_at)->format('Y-m-d H:i') : '-' }}</td>
-                                <td class="px-4 py-2">
-                                    @php
-                                        $status = $req->due_status;
-                                    @endphp
-                                    <span class="px-2 py-1 rounded text-sm
-                                        {{ $status === 'Overdue' ? 'bg-red-200 text-red-800' : '' }}
-                                        {{ $status === 'Due Today' ? 'bg-yellow-200 text-yellow-800' : '' }}
-                                        {{ $status === 'On Time' ? 'bg-green-200 text-green-800' : '' }}
-                                    ">
-                                        {{ $status }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('requisitions.show', $req) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm">Details / Review</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <x-tables.requisitions :requisitions="$requisitions" />
+                {{ $requisitions->links() }}
             @else
                 <p class="text-gray-600">You have not made any requests yet.</p>
             @endif
@@ -128,59 +36,11 @@
 
         <!-- All Requests Section for Admins -->
         @if(auth()->user()->is_admin)
-            <div class="mb-8">
-                <h2 class="text-2xl font-bold mb-4">All Book Requests</h2>
+            <div class="mb-4 mt-8">
+                <h2 class="text-2xl font-semibold tracking-tight text-gray-800 border-l-4 border-blue-200 pl-2 mb-4 font-bold mb-4">All Book Requests</h2>
                 @if($allRequisitions && $allRequisitions->count())
-                    <table class="table-auto w-full mb-4">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-2 text-left">#</th>
-                                <th class="px-4 py-2 text-left">User</th>
-                                <th class="px-4 py-2 text-left">Book</th>
-                                <th class="px-4 py-2 text-left">Status</th>
-                                <th class="px-4 py-2 text-left">Requested At</th>
-                                <th class="px-4 py-2 text-left">Expected End</th>
-                                <th class="px-4 py-2 text-left">Due</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($allRequisitions as $req)
-                                <tr>
-                                    <td class="px-4 py-2">{{ $req->number ?? '-' }}</td>
-                                    <td class="px-4 py-2">{{ $req->user->name ?? '-' }}</td>
-                                    <td class="px-4 py-2">{{ $req->book->name ?? '-' }}</td>
-                                    <td class="px-4 py-2">
-                                        <span class="px-2 py-1 rounded text-sm
-                                            {{ $req->status === 'pending' ? 'bg-yellow-200 text-yellow-800' : '' }}
-                                            {{ $req->status === 'approved' ? 'bg-green-200 text-green-800' : '' }}
-                                            {{ $req->status === 'rejected' ? 'bg-red-200 text-red-800' : '' }}">
-                                            {{ ucfirst($req->status) }}
-                                        </span>
-                                        @if($req->status === 'pending')
-                                            <form action="{{ route('requisitions.approve', $req) }}" method="POST" class="inline ml-2">
-                                                @csrf
-                                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">Approve</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2">{{ $req->requested_at ? \Carbon\Carbon::parse($req->requested_at)->format('Y-m-d H:i') : '-' }}</td>
-                                    <td class="px-4 py-2">{{ $req->expected_end_at ? \Carbon\Carbon::parse($req->expected_end_at)->format('Y-m-d H:i') : '-' }}</td>
-                                    <td class="px-4 py-2">
-                                        @php
-                                            $status = $req->due_status;
-                                        @endphp
-                                        <span class="px-2 py-1 rounded text-sm
-                                            {{ $status === 'Overdue' ? 'bg-red-200 text-red-800' : '' }}
-                                            {{ $status === 'Due Today' ? 'bg-yellow-200 text-yellow-800' : '' }}
-                                            {{ $status === 'On Time' ? 'bg-green-200 text-green-800' : '' }}
-                                        ">
-                                            {{ $status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <x-tables.requisitions-admin :requisitions="$allRequisitions" />
+                    {{ $allRequisitions->links() }}
                 @else
                     <p class="text-gray-600">No requests found.</p>
                 @endif

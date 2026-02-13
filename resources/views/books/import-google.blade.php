@@ -5,13 +5,12 @@
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-lg overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-8">
-                <h2 class="text-3xl font-bold text-white">Import Books from Google Books</h2>
-                <p class="mt-2 text-blue-100">Search and import books directly from Google's extensive catalog</p>
-            </div>
-
             <div class="p-6">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Import Books from Google Books</h2>
+                    <p class="mt-2 text-gray-600">Search and import books directly from Google's extensive catalog</p>
+                </div>
                 <!-- Success Message -->
                 @if(session('success'))
                     <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4 rounded">
@@ -65,20 +64,14 @@
                         </div>
 
                         <div class="flex gap-3">
-                            <button
-                                type="submit"
-                                class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                            >
+                            <x-buttons.search type="submit">
                                 Search Books
-                            </button>
+                            </x-buttons.search>
 
                             @if(isset($searchResults))
-                                <a
-                                    href="{{ route('books.import.google') }}"
-                                    class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors"
-                                >
+                                <x-buttons.secondary href="{{ route('books.import.google') }}">
                                     Clear Results
-                                </a>
+                                </x-buttons.secondary>
                             @endif
                         </div>
                     </form>
@@ -93,21 +86,11 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($searchResults as $book)
-                                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
-                                    <!-- Book Cover -->
-                                    <div class="h-64 bg-gray-100 flex items-center justify-center flex-shrink-0">
-                                        @if($book['thumbnail_url'])
-                                            <img
-                                                src="{{ $book['thumbnail_url'] }}"
-                                                alt="{{ $book['title'] }}"
-                                                class="max-h-full max-w-full object-contain"
-                                            >
-                                        @else
-                                            <svg class="h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                            </svg>
-                                        @endif
-                                    </div>
+                                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                                        <!-- Book Cover -->
+                                        <div class="h-64 bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                            <x-image-display :src="$book['thumbnail_url']" :alt="$book['title']" class="max-h-full max-w-full object-contain h-64 w-auto" />
+                                        </div>
 
                                     <!-- Book Details -->
                                     <div class="p-4 flex flex-col flex-grow">
@@ -198,12 +181,9 @@
                                                 >
                                             </div>
 
-                                            <button
-                                                type="submit"
-                                                class="w-full px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
-                                            >
+                                            <x-buttons.success type="submit" class="w-full">
                                                 Import Book
-                                            </button>
+                                            </x-buttons.success>
                                         </form>
                                     </div>
                                 </div>

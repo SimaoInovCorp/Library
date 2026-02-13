@@ -18,10 +18,12 @@
             transform: translateX(-100%);
         }
     }
+
     .marquee {
         display: inline-block;
         animation: marquee 15s linear infinite;
         white-space: nowrap;
+
     }
     .classy-marquee {
         font-family: 'Playfair Display', 'Montserrat', serif;
@@ -34,6 +36,8 @@
         padding: 0.25em 1em;
         border-radius: 0.5em;
         box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 0px 16px #818cf8;
+        background: linear-gradient(90deg, #e0e7ef 0%, #c7d2fe 100%);
     }
     .marquee-container {
         overflow: hidden;

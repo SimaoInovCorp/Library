@@ -33,7 +33,7 @@
             </div>
         @endif
 
-        <h2 class="text-2xl font-bold mb-4">Available Books</h2>
+        <h2 class="text-2xl font-semibold tracking-tight text-gray-800 border-l-4 border-blue-200 pl-2 mb-4">Available Books</h2>
         <x-tables.books :books="App\Models\Book::with(['authors'])->withCount('requisitions')->get()" />
     </div>
 </x-layout>

@@ -19,11 +19,11 @@ class RequisitionController extends Controller
 
         // Admins see all requisitions, but also only their own for 'My Book Requests'
         if ($user->is_admin) {
-            $allRequisitions = Requisition::with(['book', 'user'])->latest()->get();
-            $requisitions = $user->requisitions()->with('book')->latest()->get();
+            $allRequisitions = Requisition::with(['book', 'user'])->latest()->paginate(10);
+            $requisitions = $user->requisitions()->with('book')->latest()->paginate(10);
         } else {
             $allRequisitions = null;
-            $requisitions = $user->requisitions()->with('book')->latest()->get();
+            $requisitions = $user->requisitions()->with('book')->latest()->paginate(10);
         }
 
         // Get IDs of books with any pending requisition (from any user)

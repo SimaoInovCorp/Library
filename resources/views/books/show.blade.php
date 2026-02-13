@@ -6,10 +6,10 @@
         <div class="flex gap-2 justify-end mb-6">
             @auth
                 @if(auth()->user()->is_admin)
-                    <x-buttons.primary href="{{ route('books.edit', $book) }}">Edit</x-buttons.primary>
+                    <a href="{{ route('books.edit', $book) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Edit</a>
                 @endif
             @endauth
-            <x-buttons.secondary href="{{ auth()->check() && auth()->user()->is_admin ? route('books.index') : route('home') }}">Back</x-buttons.secondary>
+            <a href="{{ auth()->check() && auth()->user()->is_admin ? route('books.index') : route('home') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded">Back</a>
         </div>
         <div class="mb-4">
             <x-labels.pretty value="ISBN" />
@@ -65,10 +65,28 @@
 
         @auth
             @if(!auth()->user()->is_admin)
-                <form action="{{ route('books.requisitions.store', $book) }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Request Loan</button>
-                </form>
+                <div class="flex gap-3 flex-wrap">
+                    <!-- Request Loan (Borrowing) -->
+                    <form action="{{ route('books.requisitions.store', $book) }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Request Loan</button>
+                    </form>
+
+                    <!-- Add to Cart (Purchase) -->
+                    @if($book->price && $book->price > 0)
+                        <form action="{{ route('cart.store') }}" method="POST" class="inline">
+                            @csrf
+                            <input type="hidden" name="book_id" value="{{ $book->id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                Add to Cart - €{{ number_format($book->price, 2) }}
+                            </button>
+                        </form>
+                    @endif
+                </div>
             @endif
         @endauth
 

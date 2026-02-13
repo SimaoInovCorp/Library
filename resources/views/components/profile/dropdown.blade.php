@@ -10,7 +10,6 @@
 	<x-slot name="content">
 		<div class="py-1">
 			<x-dropdown-link href="{{ route('profile.show') }}">Profile</x-dropdown-link>
-			<x-dropdown-link href="#">Settings</x-dropdown-link>
 			<form method="POST" action="{{ route('logout') }}" x-data>
 				@csrf
 				<x-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
