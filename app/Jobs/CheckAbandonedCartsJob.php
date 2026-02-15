@@ -5,13 +5,10 @@ namespace App\Jobs;
 use App\Models\Cart;
 use App\Models\Setting;
 use App\Notifications\AbandonedCartNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
-class CheckAbandonedCartsJob implements ShouldQueue
+class CheckAbandonedCartsJob
 {
-    use Queueable;
 
     /**
      * Create a new job instance.

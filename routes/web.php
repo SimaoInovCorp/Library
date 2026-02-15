@@ -99,6 +99,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/orders', [\App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('admin/orders/{order}', [\App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::post('admin/orders/{order}/cancel', [\App\Http\Controllers\Admin\AdminOrderController::class, 'cancel'])->name('admin.orders.cancel');
+
+    // Admin Settings Management
+    Route::get('admin/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
+    Route::post('admin/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
 });
 
 // Notifications routes

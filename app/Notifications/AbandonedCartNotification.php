@@ -3,14 +3,11 @@
 namespace App\Notifications;
 
 use App\Models\Cart;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AbandonedCartNotification extends Notification implements ShouldQueue
+class AbandonedCartNotification extends Notification
 {
-    use Queueable;
 
     protected $cart;
 
@@ -72,3 +69,6 @@ class AbandonedCartNotification extends Notification implements ShouldQueue
             'cart_id' => $this->cart->id,
             'total_items' => $this->cart->total_items,
             'subtotal' => $this->cart->subtotal,
+        ];
+    }
+}

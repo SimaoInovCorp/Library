@@ -7,12 +7,7 @@
         <h1 class="text-2xl font-bold mb-4">Contact Information</h1>
         <p class="mb-4">For inquiries, feedback, or support regarding the Biblioteca project, please use the contact details or form below.</p>
 
-        <h2 class="text-xl font-semibold mt-6 mb-2">Contact Details</h2>
-        <ul class="list-none ml-0 mb-6">
-            <li><strong>Name:</strong> Simao Morais</li>
-            <li><strong>Email:</strong> <a href="mailto:spmmazb@gmail.com">spmmazb@gmail.com</a></li>
-            <li><strong>Company:</strong> InovCorp</li>
-        </ul>
+
 
         <h2 class="text-xl font-semibold mt-6 mb-2">Contact Form</h2>
 
