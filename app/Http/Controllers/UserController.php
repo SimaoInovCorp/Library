@@ -6,16 +6,22 @@ use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 use App\Services\Users\UserService;
+use App\Services\Users\UserExportService;
+use App\Services\Users\UserQueryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     protected UserService $userService;
+    protected UserExportService $userExportService;
+    protected UserQueryService $userQueryService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, UserExportService $userExportService, UserQueryService $userQueryService)
     {
         $this->userService = $userService;
+        $this->userExportService = $userExportService;
+        $this->userQueryService = $userQueryService;
     }
 
     /**
@@ -23,28 +29,14 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->query('sort', 'name');
-        $direction = $request->query('direction', 'asc');
-        $validSorts = ['name', 'email', 'created_at'];
-        $validDirections = ['asc', 'desc'];
-        $sort = in_array($sort, $validSorts) ? $sort : 'name';
-        $direction = in_array($direction, $validDirections) ? $direction : 'asc';
-
-        $query = User::query();
-
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        $users = $query->orderBy($sort, $direction)
-            ->paginate(10)
-            ->appends($request->except('page'));
+        [$users, $sort, $direction] = $this->userQueryService->listUsers($request);
 
         return view('users.index', compact('users', 'sort', 'direction'));
+    }
+
+    public function exportCsv(Request $request)
+    {
+        return $this->userExportService->export($request);
     }
 
     /**

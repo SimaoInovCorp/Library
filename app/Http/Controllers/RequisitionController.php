@@ -7,6 +7,8 @@ use App\Models\Requisition;
 use App\Models\User;
 use App\Notifications\RequisitionCreatedNotification;
 use App\Services\ActionLogger;
+use App\Services\Requisitions\RequisitionQueryService;
+use App\Services\Requisitions\RequisitionExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,46 +16,26 @@ use Illuminate\Support\Facades\DB;
 class RequisitionController extends Controller
 {
     private ActionLogger $logger;
+    private RequisitionQueryService $requisitionQueryService;
+    private RequisitionExportService $requisitionExportService;
 
-    public function __construct(ActionLogger $logger)
+    public function __construct(ActionLogger $logger, RequisitionQueryService $requisitionQueryService, RequisitionExportService $requisitionExportService)
     {
         $this->logger = $logger;
+        $this->requisitionQueryService = $requisitionQueryService;
+        $this->requisitionExportService = $requisitionExportService;
     }
 
     public function index()
     {
-        $user = auth()->user();
+        $data = $this->requisitionQueryService->getIndexData(auth()->user(), request()->query());
 
+        return view('requisitions.index', $data);
+    }
 
-        // Admins see all requisitions, but also only their own for 'My Book Requests'
-        if ($user->is_admin) {
-            $allRequisitions = Requisition::with(['book', 'user'])->latest()->paginate(10);
-            $requisitions = $user->requisitions()->with('book')->latest()->paginate(10);
-        } else {
-            $allRequisitions = null;
-            $requisitions = $user->requisitions()->with('book')->latest()->paginate(10);
-        }
-
-        // Get IDs of books with any pending requisition (from any user)
-        $booksWithPending = Requisition::where('status', 'pending')->pluck('book_id');
-
-        // Get all books not in a pending requisition
-        $availableBooks = Book::with('publisher', 'authors')
-            ->whereNotIn('id', $booksWithPending)
-            ->paginate(10);
-
-        $activeCount = Requisition::activeCount();
-        $last30DaysCount = Requisition::last30DaysCount();
-        $returnedTodayCount = Requisition::returnedTodayCount();
-
-        return view('requisitions.index', compact(
-            'requisitions',
-            'availableBooks',
-            'allRequisitions',
-            'activeCount',
-            'last30DaysCount',
-            'returnedTodayCount'
-        ));
+    public function exportCsv()
+    {
+        return $this->requisitionExportService->export();
     }
 
     public function store(Request $request, Book $book)
