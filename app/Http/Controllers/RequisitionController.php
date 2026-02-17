@@ -6,12 +6,20 @@ use App\Models\Book;
 use App\Models\Requisition;
 use App\Models\User;
 use App\Notifications\RequisitionCreatedNotification;
+use App\Services\ActionLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RequisitionController extends Controller
 {
+    private ActionLogger $logger;
+
+    public function __construct(ActionLogger $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function index()
     {
         $user = auth()->user();
@@ -104,6 +112,14 @@ class RequisitionController extends Controller
             $admin->notify(new RequisitionCreatedNotification($requisition));
         }
 
+        $this->logger->log(
+            module: 'requisition',
+            objectId: $requisition->id,
+            description: 'Created requisition for book ID '.$book->id,
+            request: $request,
+            user: $user,
+        );
+
         return redirect()->back()->with('success', 'Book request submitted successfully!');
     }
 
@@ -148,6 +164,15 @@ class RequisitionController extends Controller
         if ($notified) {
             $msg .= ' All interested users have been notified.';
         }
+
+        $this->logger->log(
+            module: 'requisition',
+            objectId: $requisition->id,
+            description: 'Returned requisition for book ID '.$requisition->book_id,
+            request: $request,
+            user: $user,
+        );
+
         return redirect()->back()->with('success', $msg);
     }
 
@@ -175,6 +200,15 @@ class RequisitionController extends Controller
             // Notify user their requisition was approved
             $requisition->user->notify(new \App\Notifications\RequisitionApprovedNotification($book));
         });
+
+        $this->logger->log(
+            module: 'requisition',
+            objectId: $requisition->id,
+            description: 'Approved requisition for book ID '.$book->id,
+            request: $request,
+            user: $user,
+        );
+
         return redirect()->back()->with('success', 'Requisition approved and book loaned!');
     }
 
