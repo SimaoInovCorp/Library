@@ -21,6 +21,9 @@
                     <a href="{{ route('admin.settings.index') }}" class="bg-yellow-400 text-black font-bold px-6 py-3 rounded shadow-md inline-block transition duration-150 border border-black hover:bg-yellow-500">
                         App Settings
                     </a>
+                    <a href="{{ route('admin.logs.index') }}" class="bg-yellow-400 text-black font-bold px-6 py-3 rounded shadow-md inline-block transition duration-150 border border-black hover:bg-yellow-500">
+                        View Logs
+                    </a>
                 @endif
             </div>
         </div>

@@ -2,10 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
+use App\Services\Requisitions\RequisitionQueryService;
 
 Route::get('/', function () {
     $featuredReviews = app(\App\Services\Books\ReviewService::class)->getFeaturedReviews(5);
-    return view('home', compact('featuredReviews'));
+    $popularBooks = Book::with(['authors'])
+        ->withCount('requisitions')
+        ->orderByDesc('requisitions_count')
+        ->limit(5)
+        ->get();
+
+    $availableBooks = app(RequisitionQueryService::class)->getAvailableBooks(request()->query(), 'home_available_books_page');
+    $search = request()->query('search');
+
+    return view('home', compact('featuredReviews', 'popularBooks', 'availableBooks', 'search'));
 })->name('home');
 
 Route::get('/about', function () {
@@ -89,6 +100,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // User management routes
     Route::resource('users', \App\Http\Controllers\UserController::class);
+    Route::get('users/export/csv', [\App\Http\Controllers\UserController::class, 'exportCsv'])->name('users.export.csv');
 
     // Review moderation routes
     Route::get('admin/reviews', [\App\Http\Controllers\ReviewController::class, 'adminIndex'])->name('admin.reviews.index');
@@ -103,6 +115,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Admin Settings Management
     Route::get('admin/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
     Route::post('admin/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
+
+    // Admin Logs
+    Route::get('admin/logs', [\App\Http\Controllers\Admin\LogController::class, 'index'])->name('admin.logs.index');
+    Route::get('admin/logs/export', [\App\Http\Controllers\Admin\LogController::class, 'export'])->name('admin.logs.export');
+
+    Route::get('admin/requisitions/export/csv', [\App\Http\Controllers\RequisitionController::class, 'exportCsv'])->name('requisitions.export.csv');
 });
 
 // Notifications routes

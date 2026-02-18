@@ -5,9 +5,13 @@ namespace App\Notifications;
 // use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+// use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactFormNotification extends Notification
+class ContactFormNotification extends Notification  /*implements ShouldQueue*/
 {
+    // use Queueable;
+
+
     // contactData array to hold form submission details
     protected array $contactData;
 
