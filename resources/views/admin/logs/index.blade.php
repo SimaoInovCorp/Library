@@ -10,12 +10,12 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl sm:rounded-lg p-6">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">User Activity Logs</h2>
+                <x-sections.header>User Activity Logs</x-sections.header>
                 <div class="flex gap-3 flex-wrap">
                     <x-buttons.link :href="route('admin.logs.export', array_filter(request()->query()))" class="bg-green-600 hover:bg-green-700">
                         Download CSV
                     </x-buttons.link>
-                    <x-buttons.link :href="route('dashboard')" class="bg-gray-600 text-gray-500 hover:bg-gray-700">
+                    <x-buttons.link :href="route('dashboard')">
                         Back to Dashboard
                     </x-buttons.link>
                 </div>

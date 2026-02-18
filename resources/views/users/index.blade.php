@@ -3,7 +3,10 @@
         Users
     </x-slot>
     <div class="container mx-auto py-4">
-        <a href="{{ route('users.create') }}" class="inline-block mb-4"><x-buttons.primary>Add User</x-buttons.primary></a>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+            <a href="{{ route('users.create') }}" class="inline-block"><x-buttons.primary>Add User</x-buttons.primary></a>
+            <x-buttons.link :href="route('users.export.csv', request()->query())" class="bg-gray-600 hover:bg-gray-700">Export Users CSV</x-buttons.link>
+        </div>
         <form method="GET" action="{{ route('users.index') }}" class="mb-4 flex flex-row gap-2">
             <input
                 type="text"

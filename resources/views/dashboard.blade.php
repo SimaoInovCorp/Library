@@ -5,7 +5,7 @@
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 ">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-            <h3 class="text-2xl font-bold mb-4 text-gray-900 shadow-md">Welcome to Your Dashboard</h3>
+            <x-sections.header>Welcome to Your Dashboard</x-sections.header>
             <p class="mb-6 text-gray-600">Manage your account and settings from here.</p>
             <div class="flex gap-4 flex-wrap">
                 <a href="{{ route('home') }}" class="bg-yellow-400 text-black font-bold px-6 py-3 rounded shadow-md inline-block transition duration-150 border border-black hover:bg-yellow-500">

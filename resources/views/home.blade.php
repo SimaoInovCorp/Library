@@ -9,10 +9,29 @@
         @if(session('error'))
             <x-toast type="error">{{ session('error') }}</x-toast>
         @endif
+        @if(isset($popularBooks) && $popularBooks->count())
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">🔥 Most Popular Books</h2>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach($popularBooks as $book)
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500">{{ $loop->iteration }}.</p>
+                                    <a href="{{ route('books.show', $book) }}" class="text-lg font-semibold text-blue-700 hover:underline">{{ $book->name }}</a>
+                                    <p class="text-sm text-gray-600">{{ $book->authors->pluck('name')->join(', ') }}</p>
+                                </div>
+                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">{{ $book->requisitions_count }} requests</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
         <!-- Featured Reviews Section -->
         @if($featuredReviews->count() > 0)
             <div class="mb-8 bg-blue-50 border border-blue-200 rounded p-6">
-                <h2 class="text-2xl font-bold mb-4">📚 Featured Reviews</h2>
+                <x-sections.header>📚 Featured Reviews</x-sections.header>
                 <div class="space-y-4">
                     @foreach($featuredReviews as $review)
                         <div class="bg-white border border-gray-200 rounded p-4">
@@ -33,7 +52,21 @@
             </div>
         @endif
 
-        <h2 class="text-2xl font-semibold tracking-tight text-gray-800 border-l-4 border-blue-200 pl-2 mb-4">Available Books</h2>
-        <x-tables.books :books="App\Models\Book::with(['authors'])->withCount('requisitions')->get()" />
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <x-sections.header>Available Books</x-sections.header>
+            <form method="GET" action="{{ route('home') }}" class="flex gap-2">
+                <input type="text" name="search" value="{{ $search }}" placeholder="Search by name or ISBN" class="form-input px-4 py-2 rounded border border-gray-300" />
+                <x-buttons.search>Search</x-buttons.search>
+                @if($search)
+                    <a href="{{ route('home') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded">Clear</a>
+                @endif
+            </form>
+        </div>
+        @if(isset($availableBooks) && $availableBooks->count())
+            <x-tables.books :books="$availableBooks" />
+            {{ $availableBooks->links() }}
+        @else
+            <p class="text-gray-600">No available books at the moment.</p>
+        @endif
     </div>
 </x-layout>
