@@ -29,7 +29,7 @@
             />
             <x-buttons.search>Search</x-buttons.search>
             @if(request('search'))
-                <x-buttons.link :href="route('books.index', array_filter(request()->except(['search', 'page'])))" class="bg-gray-300 hover:bg-gray-400 text-gray-800">Clear</x-buttons.link>
+                <x-buttons.clear :href="route('books.index', array_filter(request()->except(['search', 'page'])))">Clear</x-buttons.clear>
             @endif
             <input type="hidden" name="sort" value="{{ $sort }}">
             <input type="hidden" name="direction" value="{{ $direction }}">

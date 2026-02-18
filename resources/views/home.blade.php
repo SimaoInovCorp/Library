@@ -54,13 +54,15 @@
 
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <x-sections.header>Available Books</x-sections.header>
-            <form method="GET" action="{{ route('home') }}" class="flex gap-2">
-                <input type="text" name="search" value="{{ $search }}" placeholder="Search by name or ISBN" class="form-input px-4 py-2 rounded border border-gray-300" />
-                <x-buttons.search>Search</x-buttons.search>
+            <x-forms.search
+                :action="route('home')"
+                :value="$search"
+                placeholder="Search by name or ISBN"
+            >
                 @if($search)
-                    <a href="{{ route('home') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded">Clear</a>
+                    <x-buttons.clear :href="route('home')">Clear</x-buttons.clear>
                 @endif
-            </form>
+            </x-forms.search>
         </div>
         @if(isset($availableBooks) && $availableBooks->count())
             <x-tables.books :books="$availableBooks" />
